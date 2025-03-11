@@ -365,23 +365,31 @@ function Dashboard() {
       const response = await axios.get(`/api/search?query=${encodeURIComponent(searchQuery)}&page=${currentPage}&limit=${resultsPerPage}`);
       setHasSearched(true);
       
-      if (response.data.matches) {
-        // Name search results
-        if (response.data.matches.length === 0) {
+      // Handle the Spring Boot response
+      const data = response.data;
+      
+      if (Array.isArray(data)) {
+        // Multiple results case
+        if (data.length === 0) {
           setNoResults(true);
           setSearchResults(null);
-        } else if (response.data.matches.length === 1 && response.data.pagination.total === 1) {
-          setSearchResults(response.data.matches[0]);
+        } else if (data.length === 1) {
+          setSearchResults(data[0]);
         } else {
-          setMultipleResults(response.data.matches);
-          setTotalPages(response.data.pagination.totalPages);
-          setTotalResults(response.data.pagination.total);
+          setMultipleResults(data);
+          setTotalPages(Math.ceil(data.length / resultsPerPage));
+          setTotalResults(data.length);
           setSearchResults(null);
         }
       } else {
-        // ID search results
-        setSearchResults(response.data);
-        if (!response.data.student && !response.data.info && (!response.data.candidacy || response.data.candidacy.length === 0)) {
+        // Single result case
+        setSearchResults({
+          info: data.info,
+          student: data.student,
+          candidacy: data.candiday || [] // Handle the Spring Boot property name
+        });
+        
+        if (!data.student && !data.info && (!data.candiday || data.candiday.length === 0)) {
           setNoResults(true);
           setSearchResults(null);
         }

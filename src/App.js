@@ -52,7 +52,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import BadgeIcon from '@mui/icons-material/Badge';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // components
@@ -329,6 +329,7 @@ const drawerWidth = 240;
 
 function Dashboard() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -344,8 +345,9 @@ function Dashboard() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const resultsPerPage = 5;
-
+  
   const handleLogout = () => {
+    logout();
     navigate('/login');
   };
 

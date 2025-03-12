@@ -57,10 +57,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
     });
   };
 
-  // Ensure data is an array, handling both candidacy and candiday property names
-  const candidacyData = Array.isArray(data) ? data : [];
-
-  if (!candidacyData || candidacyData.length === 0) return null;
+  if (!data || data.length === 0) return null;
 
   // Handle tab change for records
   const handleTabChange = (event, newValue) => {
@@ -82,79 +79,78 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
 
   // Group fields into categories
   const programFields = [
-    { label: 'ID Number', value: candidacyData[selectedTab].ID_NUM },
-    { label: 'Year Code', value: candidacyData[selectedTab].YR_CDE },
-    { label: 'Division Code', value: candidacyData[selectedTab].DIV_CDE },
-    { label: 'Stage', value: candidacyData[selectedTab].STAGE, chip: true },
-    { label: 'Program Code', value: candidacyData[selectedTab].PROG_CDE },
-    { label: 'Term Code', value: candidacyData[selectedTab].TRM_CDE }
+    { label: 'ID Number', value: data[selectedTab].ID_NUM },
+    { label: 'Year Code', value: data[selectedTab].YR_CDE },
+    { label: 'Division Code', value: data[selectedTab].DIV_CDE },
+    { label: 'Stage', value: data[selectedTab].STAGE, chip: true },
+    { label: 'Program Code', value: data[selectedTab].PROG_CDE },
+    { label: 'Term Code', value: data[selectedTab].TRM_CDE }
   ];
 
   const educationFields = [
-    { label: 'Bac Year', value: candidacyData[selectedTab].Bac_year },
-    { label: 'High School', value: candidacyData[selectedTab].HIGH_SCHOOL },
-    { label: 'High School Diploma', value: candidacyData[selectedTab].High_school_diploma },
-    { label: 'High School Distinction', value: candidacyData[selectedTab].High_School_distinction },
-    { label: 'HS Org Type', value: candidacyData[selectedTab].HS_Org_Type_AD },
-    { label: 'GPA', value: candidacyData[selectedTab].gpa, icon: <GradeIcon fontSize="small" color="success" /> },
-    { label: 'Total AP Credits', value: candidacyData[selectedTab].total_ap_credits },
-    { label: 'Total Inst Credits', value: candidacyData[selectedTab].total_inst_credits },
-    { label: 'School Type', value: candidacyData[selectedTab].school_type },
-    { label: 'CL Org Type', value: candidacyData[selectedTab].CL_Org_Type_AD },
-    { label: 'CL GPA', value: candidacyData[selectedTab].CL_GPA },
-    { label: 'CL Total AP Credits', value: candidacyData[selectedTab].CL_Total_AP_Credits },
-    { label: 'CL Total Inst Credits', value: candidacyData[selectedTab].CL_Total_Inst_Credits }
+    { label: 'Bac Year', value: data[selectedTab].Bac_year },
+    { label: 'High School', value: data[selectedTab].HIGH_SCHOOL },
+    { label: 'High School Diploma', value: data[selectedTab].High_school_diploma },
+    { label: 'High School Distinction', value: data[selectedTab].High_School_distinction },
+    { label: 'HS Org Type', value: data[selectedTab].HS_Org_Type_AD },
+    { label: 'GPA', value: data[selectedTab].gpa, icon: <GradeIcon fontSize="small" color="success" /> },
+    { label: 'Total AP Credits', value: data[selectedTab].total_ap_credits },
+    { label: 'Total Inst Credits', value: data[selectedTab].total_inst_credits },
+    { label: 'School Type', value: data[selectedTab].school_type },
+    { label: 'CL Org Type', value: data[selectedTab].CL_Org_Type_AD },
+    { label: 'CL GPA', value: data[selectedTab].CL_GPA },
+    { label: 'CL Total AP Credits', value: data[selectedTab].CL_Total_AP_Credits },
+    { label: 'CL Total Inst Credits', value: data[selectedTab].CL_Total_Inst_Credits }
   ];
 
   const testScoresFields = [
-    { label: 'ACT', value: candidacyData[selectedTab].ACt },
-    { label: 'GAT', value: candidacyData[selectedTab].GAT },
-    { label: 'GRE', value: candidacyData[selectedTab].GRE },
-    { label: 'SAT', value: candidacyData[selectedTab].SAT },
-    { label: 'SAT Reading', value: candidacyData[selectedTab].SATRC },
-    { label: 'SAT Writing', value: candidacyData[selectedTab].SATWC },
-    { label: 'TEF', value: candidacyData[selectedTab].TEF },
-    { label: 'TOEPP', value: candidacyData[selectedTab].TOEPP }
+    { label: 'ACT', value: data[selectedTab].ACt },
+    { label: 'GAT', value: data[selectedTab].GAT },
+    { label: 'GRE', value: data[selectedTab].GRE },
+    { label: 'SAT', value: data[selectedTab].SAT },
+    { label: 'SAT Reading', value: data[selectedTab].SATRC },
+    { label: 'SAT Writing', value: data[selectedTab].SATWC },
+    { label: 'TEF', value: data[selectedTab].TEF },
+    { label: 'TOEPP', value: data[selectedTab].TOEPP }
   ];
 
   const personalFields = [
     { 
       label: 'Birth Date', 
-      value: candidacyData[selectedTab].birth_dte ? new Date(candidacyData[selectedTab].birth_dte).toLocaleDateString() : null,
+      value: data[selectedTab].birth_dte ? new Date(data[selectedTab].birth_dte).toLocaleDateString() : null,
       icon: <CalendarTodayIcon fontSize="small" color="info" />
     },
-    { label: 'Citizenship', value: candidacyData[selectedTab].citizen_of },
+    { label: 'Citizenship', value: data[selectedTab].citizen_of },
     { 
       label: 'City', 
-      value: candidacyData[selectedTab].CITY,
+      value: data[selectedTab].CITY,
       icon: <LocationOnIcon fontSize="small" color="info" />
     },
-    { label: 'Country', value: candidacyData[selectedTab].COUNTRY },
-    { label: 'Address', value: candidacyData[selectedTab].ADDR_LINE_1 },
-    { label: 'Birth Name', value: candidacyData[selectedTab].BIRTH_NAME },
-    { label: 'Alternate Contact', value: candidacyData[selectedTab].AlternateContact },
-    { label: 'First Name', value: candidacyData[selectedTab].FIRST_NAME },
-    { label: 'Last Name', value: candidacyData[selectedTab].LAST_NAME },
-    { label: 'Email Address', value: candidacyData[selectedTab].EMAIL_ADDRESS },
-    { label: 'Gender', value: candidacyData[selectedTab].gender },
-    { label: 'Mobile', value: candidacyData[selectedTab].mobile }
+    { label: 'Country', value: data[selectedTab].COUNTRY },
+    { label: 'Address', value: data[selectedTab].ADDR_LINE_1 },
+    { label: 'Birth Name', value: data[selectedTab].BIRTH_NAME },
+    { label: 'First Name', value: data[selectedTab].FIRST_NAME },
+    { label: 'Last Name', value: data[selectedTab].LAST_NAME },
+    { label: 'Email Address', value: data[selectedTab].EMAIL_ADDRESS },
+    { label: 'Gender', value: data[selectedTab].gender },
+    { label: 'Mobile', value: data[selectedTab].mobile }
   ];
 
   const familyFields = [
-    { label: 'Father Address', value: candidacyData[selectedTab].Father_address },
-    { label: 'Mother Address', value: candidacyData[selectedTab].Mother_address },
-    { label: 'Father Phone', value: candidacyData[selectedTab].Father_Phone },
-    { label: 'Mother Phone', value: candidacyData[selectedTab].Mother_Phone },
-    { label: 'Father Occupation', value: candidacyData[selectedTab].Father_Occupation },
-    { label: 'Mother Occupation', value: candidacyData[selectedTab].Mother_Occupation }
+    { label: 'Father Address', value: data[selectedTab].Father_address },
+    { label: 'Mother Address', value: data[selectedTab].Mother_address },
+    { label: 'Father Phone', value: data[selectedTab].Father_Phone },
+    { label: 'Mother Phone', value: data[selectedTab].Mother_Phone },
+    { label: 'Father Occupation', value: data[selectedTab].Father_Occupation },
+    { label: 'Mother Occupation', value: data[selectedTab].Mother_Occupation }
   ];
 
   const applicationFields = [
     { 
       label: 'Application Fee Date', 
-      value: candidacyData[selectedTab].app_fee_dte ? new Date(candidacyData[selectedTab].app_fee_dte).toLocaleDateString() : null 
+      value: data[selectedTab].app_fee_dte ? new Date(data[selectedTab].app_fee_dte).toLocaleDateString() : null 
     },
-    { label: 'Custom Field', value: candidacyData[selectedTab].udef_1a_1 }
+    { label: 'Custom Field', value: data[selectedTab].udef_1a_1 }
   ];
 
   // Get stage color
@@ -414,7 +410,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
     >
       <CardHeader
         avatar={
-          <Badge badgeContent={candidacyData.length} color="primary" 
+          <Badge badgeContent={data.length} color="primary" 
             sx={{ 
               '& .MuiBadge-badge': { 
                 fontSize: '0.8rem', 
@@ -453,7 +449,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
         subheader={
           <Box sx={{ mt: 1 }}>
             <Chip 
-              label={`Program: ${candidacyData[selectedTab].PROG_CDE || 'N/A'}`} 
+              label={`Program: ${data[selectedTab].PROG_CDE || 'N/A'}`} 
               size="small" 
               variant="outlined" 
               sx={{ 
@@ -465,16 +461,16 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
               }}
             />
             <Chip 
-              label={`Stage: ${candidacyData[selectedTab].STAGE || 'N/A'}`} 
+              label={`Stage: ${data[selectedTab].STAGE || 'N/A'}`} 
               size="small" 
               sx={{ 
                 mt: { xs: 1, sm: 0 },
                 fontWeight: 500,
                 borderRadius: '6px',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-                bgcolor: alpha(getStageColor(candidacyData[selectedTab].STAGE), 0.1),
-                color: getStageColor(candidacyData[selectedTab].STAGE),
-                border: `1px solid ${alpha(getStageColor(candidacyData[selectedTab].STAGE), 0.2)}`,
+                bgcolor: alpha(getStageColor(data[selectedTab].STAGE), 0.1),
+                color: getStageColor(data[selectedTab].STAGE),
+                border: `1px solid ${alpha(getStageColor(data[selectedTab].STAGE), 0.2)}`,
               }}
             />
           </Box>
@@ -486,7 +482,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
         }}
       />
       
-      {candidacyData.length > 1 && (
+      {data.length > 1 && (
         <Tabs
           value={selectedTab}
           onChange={handleTabChange}
@@ -514,7 +510,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
             }
           }}
         >
-          {candidacyData.map((item, index) => (
+          {data.map((item, index) => (
             <Tab 
               key={index} 
               label={`Record ${index + 1}`} 

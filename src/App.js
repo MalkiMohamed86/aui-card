@@ -52,13 +52,13 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import BadgeIcon from '@mui/icons-material/Badge';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // components
 import StudentCard from './components/StudentCard';
 import InfoCard from './components/InfoCard';
 import CandidacyCard from './components/CandidacyCard';
-
-// Import the Login component
 import Login from './pages/Login';
 
 // Create a custom theme
@@ -362,41 +362,49 @@ function Dashboard() {
     setMultipleResults(null);
     
     try {
-      const response = await axios.get(`/api/search?query=${encodeURIComponent(searchQuery)}&page=${currentPage}&limit=${resultsPerPage}`);
+      const response = await axios.post(`https://tour.aui.ma/api/student`, {
+        id: searchQuery,
+        page: currentPage,
+        limit: resultsPerPage
+      }, {
+        withCredentials: true, // for handling cookies
+        headers: {
+          "Content-Type": "application/json", // Explicitly set JSON content type
+          "Accept": "application/json"
+        }
+      }
+    );
+
       setHasSearched(true);
       
-      // Handle the Spring Boot response
-      const data = response.data;
-      
-      if (Array.isArray(data)) {
-        // Multiple results case
-        if (data.length === 0) {
-          setNoResults(true);
-          setSearchResults(null);
-        } else if (data.length === 1) {
-          setSearchResults(data[0]);
+      if (response.data.success) {
+        if (response.data.type === 'name_search') {
+          // name search res with multi matches
+          if (response.data.matches.length === 0) {
+            setNoResults(true);
+            setSearchResults(null);
+          } else if (response.data.matches.length === 1) {
+            setSearchResults(response.data.matches[0]);
+          } else {
+            setMultipleResults(response.data.matches);
+            setTotalPages(response.data.pagination.totalPages);
+            setTotalResults(response.data.pagination.total);
+          }
         } else {
-          setMultipleResults(data);
-          setTotalPages(Math.ceil(data.length / resultsPerPage));
-          setTotalResults(data.length);
-          setSearchResults(null);
+          // ID search res
+          if (response.data.data) {
+            setSearchResults(response.data.data);
+          } else {
+            setNoResults(true);
+            setSearchResults(null);
+          }
         }
       } else {
-        // Single result case
-        setSearchResults({
-          info: data.info,
-          student: data.student,
-          candidacy: data.candiday || [] // Handle the Spring Boot property name
-        });
-        
-        if (!data.student && !data.info && (!data.candiday || data.candiday.length === 0)) {
-          setNoResults(true);
-          setSearchResults(null);
-        }
+        setError(response.data.message || 'Error fetching data');
       }
     } catch (err) {
       console.error('Error searching:', err);
-      setError('Error searching the database');
+      setError(err.response?.data?.message || 'Error connecting to the server');
       setHasSearched(true);
       setNoResults(false);
     } finally {
@@ -1154,16 +1162,16 @@ function Dashboard() {
                         minHeight: '300px',
                         width: '100%',
                         maxWidth: {
-                          xs: '100%', // Full width on mobile
-                          sm: '100%', // Full width on small tablets
-                          md: !drawerOpen ? '1200px' : 'none', // 1200px on medium screens when drawer is closed
-                          lg: !drawerOpen ? '1400px' : 'none', // 1400px on large screens when drawer is closed
+                          xs: '100%', 
+                          sm: '100%', 
+                          md: !drawerOpen ? '1200px' : 'none', 
+                          lg: !drawerOpen ? '1400px' : 'none', 
                         },
                         mx: {
-                          xs: 0, // No margin on mobile
-                          sm: 0, // No margin on small tablets
-                          md: !drawerOpen ? 'auto' : 0, // Auto margin on medium screens when drawer is closed
-                          lg: !drawerOpen ? 'auto' : 0, // Auto margin on large screens when drawer is closed
+                          xs: 0, 
+                          sm: 0, 
+                          md: !drawerOpen ? 'auto' : 0, 
+                          lg: !drawerOpen ? 'auto' : 0, 
                         },
                       }}
                     >
@@ -1530,13 +1538,22 @@ function Dashboard() {
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

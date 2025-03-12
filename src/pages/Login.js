@@ -11,7 +11,8 @@ import {
   alpha,
   keyframes,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import MicrosoftIcon from '@mui/icons-material/Microsoft';
 
 // Define typing animation keyframes
@@ -73,9 +74,19 @@ const theme = createTheme({
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
+  
+  const from = location.state?.from?.pathname || "/dashboard";
+
+  useEffect(() => {
+    if (user) {
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, from]);
 
   const handleOutlookLogin = () => {
-    navigate('/dashboard');
+    window.location.href = 'https://tour.aui.ma/api/user';
   };
 
   return (

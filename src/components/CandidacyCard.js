@@ -79,23 +79,23 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
 
   // Group fields into categories
   const programFields = [
-    { label: 'ID Number', value: data[selectedTab].ID_NUM },
-    { label: 'Year Code', value: data[selectedTab].YR_CDE },
-    { label: 'Division Code', value: data[selectedTab].DIV_CDE },
-    { label: 'Stage', value: data[selectedTab].STAGE, chip: true },
-    { label: 'Program Code', value: data[selectedTab].PROG_CDE },
-    { label: 'Term Code', value: data[selectedTab].TRM_CDE }
+    { label: 'ID Number', value: data[selectedTab].idNum },
+    { label: 'Year Code', value: data[selectedTab].yearCode },
+    { label: 'Division Code', value: data[selectedTab].divisionCode },
+    { label: 'Stage', value: data[selectedTab].stage, chip: true },
+    { label: 'Program Code', value: data[selectedTab].programCode },
+    { label: 'Term Code', value: data[selectedTab].termCode }
   ];
 
   const educationFields = [
-    { label: 'Bac Year', value: data[selectedTab].Bac_year },
-    { label: 'High School', value: data[selectedTab].HIGH_SCHOOL },
-    { label: 'High School Diploma', value: data[selectedTab].High_school_diploma },
-    { label: 'High School Distinction', value: data[selectedTab].High_School_distinction },
+    { label: 'Bac Year', value: data[selectedTab].bacYear },
+    { label: 'High School', value: data[selectedTab].highSchool },
+    { label: 'High School Diploma', value: data[selectedTab].highSchoolDiploma },
+    { label: 'High School Distinction', value: data[selectedTab].highSchoolDistinction },
     { label: 'HS Org Type', value: data[selectedTab].HS_Org_Type_AD },
     { label: 'GPA', value: data[selectedTab].gpa, icon: <GradeIcon fontSize="small" color="success" /> },
-    { label: 'Total AP Credits', value: data[selectedTab].total_ap_credits },
-    { label: 'Total Inst Credits', value: data[selectedTab].total_inst_credits },
+    { label: 'Total AP Credits', value: data[selectedTab].totalApCredits },
+    { label: 'Total Inst Credits', value: data[selectedTab].totalInstCredits },
     { label: 'School Type', value: data[selectedTab].school_type },
     { label: 'CL Org Type', value: data[selectedTab].CL_Org_Type_AD },
     { label: 'CL GPA', value: data[selectedTab].CL_GPA },
@@ -117,21 +117,21 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
   const personalFields = [
     { 
       label: 'Birth Date', 
-      value: data[selectedTab].birth_dte ? new Date(data[selectedTab].birth_dte).toLocaleDateString() : null,
+      value: data[selectedTab].birthDate ? new Date(data[selectedTab].birthDate).toLocaleDateString() : null,
       icon: <CalendarTodayIcon fontSize="small" color="info" />
     },
-    { label: 'Citizenship', value: data[selectedTab].citizen_of },
+    { label: 'Citizenship', value: data[selectedTab].citizenOf },
     { 
       label: 'City', 
-      value: data[selectedTab].CITY,
+      value: data[selectedTab].city,
       icon: <LocationOnIcon fontSize="small" color="info" />
     },
-    { label: 'Country', value: data[selectedTab].COUNTRY },
-    { label: 'Address', value: data[selectedTab].ADDR_LINE_1 },
+    { label: 'Country', value: data[selectedTab].country },
+    { label: 'Address', value: data[selectedTab].addressLine1 },
     { label: 'Birth Name', value: data[selectedTab].BIRTH_NAME },
-    { label: 'First Name', value: data[selectedTab].FIRST_NAME },
-    { label: 'Last Name', value: data[selectedTab].LAST_NAME },
-    { label: 'Email Address', value: data[selectedTab].EMAIL_ADDRESS },
+    { label: 'First Name', value: data[selectedTab].firstName },
+    { label: 'Last Name', value: data[selectedTab].lastName },
+    { label: 'Email Address', value: data[selectedTab].emailAddress },
     { label: 'Gender', value: data[selectedTab].gender },
     { label: 'Mobile', value: data[selectedTab].mobile }
   ];
@@ -449,7 +449,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
         subheader={
           <Box sx={{ mt: 1 }}>
             <Chip 
-              label={`Program: ${data[selectedTab].PROG_CDE || 'N/A'}`} 
+              label={`Program: ${data[selectedTab].programCode || 'N/A'}`} 
               size="small" 
               variant="outlined" 
               sx={{ 
@@ -461,16 +461,16 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
               }}
             />
             <Chip 
-              label={`Stage: ${data[selectedTab].STAGE || 'N/A'}`} 
+              label={`Stage: ${data[selectedTab].stage || 'N/A'}`} 
               size="small" 
               sx={{ 
                 mt: { xs: 1, sm: 0 },
                 fontWeight: 500,
                 borderRadius: '6px',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-                bgcolor: alpha(getStageColor(data[selectedTab].STAGE), 0.1),
-                color: getStageColor(data[selectedTab].STAGE),
-                border: `1px solid ${alpha(getStageColor(data[selectedTab].STAGE), 0.2)}`,
+                bgcolor: alpha(getStageColor(data[selectedTab].stage), 0.1),
+                color: getStageColor(data[selectedTab].stage),
+                border: `1px solid ${alpha(getStageColor(data[selectedTab].stage), 0.2)}`,
               }}
             />
           </Box>

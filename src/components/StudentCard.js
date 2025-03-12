@@ -27,21 +27,21 @@ const StudentCard = ({ data }) => {
   if (!data) return null;
 
   const fields = [
-    { label: 'ID Number', value: data.IDNUM, icon: <AssignmentIcon fontSize="small" color="primary" /> },
-    { label: 'Employment Code', value: data.Stud_employ_cde },
-    { label: 'Web Group', value: data.web_grp },
-    { label: 'Tuition Code', value: data.tuition_cde },
-    { label: 'Entrance Year', value: data.ENTRANCE_YR },
-    { label: 'Entrance Term', value: data.ENTRANCE_TRM },
-    { label: 'Current Class', value: data.CURRENT_CLASS_CDE },
-    { label: 'Number of Courses', value: data.NUM_OF_CRS },
-    { label: 'Hours Enrolled', value: data.HRS_ENROLLED },
-    { label: 'Term Hours Earned', value: data.TRM_HRS_EARNED },
-    { label: 'Career GPA', value: data.CAREER_GPA, icon: <GradeIcon fontSize="small" color="primary" /> },
-    { label: 'Degree Code', value: data.DEGR_CDE },
-    { label: 'Major', value: data.MAJOR_1 },
-    { label: 'Minor', value: data.MINOR_1 },
-    { label: 'Concentration', value: data.CONCENTRATION_1 }
+    { label: 'ID Number', value: data.idNum, icon: <AssignmentIcon fontSize="small" color="primary" /> },
+    { label: 'Employment Code', value: data.studentEmployCode },
+    { label: 'Web Group', value: data.webGroup },
+    { label: 'Tuition Code', value: data.tuitionCode },
+    { label: 'Entrance Year', value: data.entranceYear },
+    { label: 'Entrance Term', value: data.entranceTerm },
+    { label: 'Current Class', value: data.currentClassCode },
+    { label: 'Number of Courses', value: data.numOfCourses },
+    { label: 'Hours Enrolled', value: data.hoursEnrolled },
+    { label: 'Term Hours Earned', value: data.termHoursEarned },
+    { label: 'Career GPA', value: data.careerGpa, icon: <GradeIcon fontSize="small" color="primary" /> },
+    { label: 'Degree Code', value: data.degreeCode },
+    { label: 'Major', value: data.major1 },
+    { label: 'Minor', value: data.minor1 },
+    { label: 'Concentration', value: data.concentration1 }
   ];
 
   const identificationFields = fields.slice(0, 4);
@@ -94,7 +94,7 @@ const StudentCard = ({ data }) => {
         subheader={
           <Box sx={{ mt: 1 }}>
             <Chip 
-              label={`ID: ${data.IDNUM || 'N/A'}`} 
+              label={`ID: ${data.idNum || 'N/A'}`} 
               sx={{ 
                 fontWeight: 500,
                 borderRadius: '6px',

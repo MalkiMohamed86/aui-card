@@ -40,10 +40,10 @@ const InfoCard = ({ data }) => {
 
   // Define fields to display
   const personalFields = [
-    { label: 'ID Number', value: data.ID_NUM, icon: <BadgeIcon fontSize="small" color="secondary" /> },
-    { label: 'Last Name', value: data.LAST_NAME },
-    { label: 'First Name', value: data.FIRST_NAME },
-    { label: 'Middle Name', value: data.MIDDLE_NAME }
+    { label: 'ID Number', value: data.id_num, icon: <BadgeIcon fontSize="small" color="secondary" /> },
+    { label: 'Last Name', value: data.last_name },
+    { label: 'First Name', value: data.first_name },
+    { label: 'Middle Name', value: data.middle_name }
   ];
 
   const contactFields = [

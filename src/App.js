@@ -325,7 +325,6 @@ const theme = createTheme({
   },
 });
 
-// Sidebar width - increasing from 220px to 240px
 const drawerWidth = 240;
 
 function Dashboard() {
@@ -369,7 +368,7 @@ function Dashboard() {
       }, {
         withCredentials: true, // for handling cookies
         headers: {
-          "Content-Type": "application/json", // Explicitly set JSON content type
+          "Content-Type": "application/json", 
           "Accept": "application/json"
         }
       }
@@ -393,7 +392,7 @@ function Dashboard() {
         } else {
           // ID search res
           if (response.data.data) {
-            setSearchResults(response.data.data);
+            setSearchResults(response.data);
           } else {
             setNoResults(true);
             setSearchResults(null);
@@ -1420,7 +1419,7 @@ function Dashboard() {
                         <Grid item xs={12} md={activeCard === 'all' ? 6 : 12} lg={activeCard === 'all' ? 4 : 12}>
                           {searchResults.candidacy && searchResults.candidacy.length > 0 ? (
                             <CandidacyCard 
-                              data={searchResults.candidacy} 
+                              data={searchResults.candiday} 
                               fullScreen={activeCard === 'candidacy'}
                             />
                           ) : (

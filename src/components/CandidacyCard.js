@@ -88,30 +88,23 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
   ];
 
   const educationFields = [
-    { label: 'Bac Year', value: data[selectedTab].bacYear },
-    { label: 'High School', value: data[selectedTab].highSchool },
-    { label: 'High School Diploma', value: data[selectedTab].highSchoolDiploma },
-    { label: 'High School Distinction', value: data[selectedTab].highSchoolDistinction },
-    { label: 'HS Org Type', value: data[selectedTab].HS_Org_Type_AD },
-    { label: 'GPA', value: data[selectedTab].gpa, icon: <GradeIcon fontSize="small" color="success" /> },
-    { label: 'Total AP Credits', value: data[selectedTab].totalApCredits },
-    { label: 'Total Inst Credits', value: data[selectedTab].totalInstCredits },
-    { label: 'School Type', value: data[selectedTab].school_type },
-    { label: 'CL Org Type', value: data[selectedTab].CL_Org_Type_AD },
-    { label: 'CL GPA', value: data[selectedTab].CL_GPA },
-    { label: 'CL Total AP Credits', value: data[selectedTab].CL_Total_AP_Credits },
-    { label: 'CL Total Inst Credits', value: data[selectedTab].CL_Total_Inst_Credits }
+    { label: 'HS Org Type', value: data[selectedTab].hsOrgTypeAd },
+    { label: 'School Type', value: data[selectedTab].schoolType },
+    { label: 'CL Org Type', value: data[selectedTab].clOrgTypeAd },
+    { label: 'CL GPA', value: data[selectedTab].clGpa },
+    { label: 'CL Total AP Credits', value: data[selectedTab].clTotalApCredits },
+    { label: 'CL Total Inst Credits', value: data[selectedTab].clTotalInstCredits }
   ];
 
   const testScoresFields = [
-    { label: 'ACT', value: data[selectedTab].ACt },
-    { label: 'GAT', value: data[selectedTab].GAT },
-    { label: 'GRE', value: data[selectedTab].GRE },
-    { label: 'SAT', value: data[selectedTab].SAT },
-    { label: 'SAT Reading', value: data[selectedTab].SATRC },
-    { label: 'SAT Writing', value: data[selectedTab].SATWC },
-    { label: 'TEF', value: data[selectedTab].TEF },
-    { label: 'TOEPP', value: data[selectedTab].TOEPP }
+    { label: 'ACT', value: data[selectedTab].act },
+    { label: 'GAT', value: data[selectedTab].gat },
+    { label: 'GRE', value: data[selectedTab].gre },
+    { label: 'SAT', value: data[selectedTab].sat },
+    { label: 'SAT Reading', value: data[selectedTab].satRc },
+    { label: 'SAT Writing', value: data[selectedTab].satWc },
+    { label: 'TEF', value: data[selectedTab].tef },
+    { label: 'TOEPP', value: data[selectedTab].toepp }
   ];
 
   const personalFields = [
@@ -137,20 +130,17 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
   ];
 
   const familyFields = [
-    { label: 'Father Address', value: data[selectedTab].Father_address },
-    { label: 'Mother Address', value: data[selectedTab].Mother_address },
-    { label: 'Father Phone', value: data[selectedTab].Father_Phone },
-    { label: 'Mother Phone', value: data[selectedTab].Mother_Phone },
-    { label: 'Father Occupation', value: data[selectedTab].Father_Occupation },
-    { label: 'Mother Occupation', value: data[selectedTab].Mother_Occupation }
+    { label: 'Father Address', value: data[selectedTab].fatherAddress },
+    { label: 'Mother Address', value: data[selectedTab].motherAddress },
+    { label: 'Father Phone', value: data[selectedTab].fatherPhone },
+    { label: 'Mother Phone', value: data[selectedTab].motherPhone },
+    { label: 'Father Occupation', value: data[selectedTab].fatherOccupation },
+    { label: 'Mother Occupation', value: data[selectedTab].motherOccupation }
   ];
 
   const applicationFields = [
-    { 
-      label: 'Application Fee Date', 
-      value: data[selectedTab].app_fee_dte ? new Date(data[selectedTab].app_fee_dte).toLocaleDateString() : null 
-    },
-    { label: 'Custom Field', value: data[selectedTab].udef_1a_1 }
+    { label: 'Application Fee Date', value: data[selectedTab].appFeeDate ? new Date(data[selectedTab].appFeeDate).toLocaleDateString() : null },
+    { label: 'Custom Field', value: data[selectedTab].udef1a1 }
   ];
 
   // Get stage color

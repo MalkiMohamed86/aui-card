@@ -376,7 +376,7 @@ function Dashboard() {
 
       setHasSearched(true);
       
-      if (response.data.success) {
+      if (response.data) {
         if (response.data.type === 'name_search') {
           // name search res with multi matches
           if (response.data.matches.length === 0) {

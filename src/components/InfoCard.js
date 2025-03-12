@@ -36,7 +36,7 @@ const InfoCard = ({ data }) => {
   if (!data) return null;
 
   // full name format
-  const fullName = `${data.FIRST_NAME || ''} ${data.MIDDLE_NAME ? data.MIDDLE_NAME + ' ' : ''}${data.LAST_NAME || ''}`.trim();
+  const fullName = `${data.first_name || ''} ${data.middle_name ? data.middle_name + ' ' : ''}${data.last_name || ''}`.trim();
 
   // Define fields to display
   const personalFields = [
@@ -49,23 +49,23 @@ const InfoCard = ({ data }) => {
   const contactFields = [
     { 
       label: 'Mobile Phone', 
-      value: data.MOBILE_PHONE, 
+      value: data.mobile_phone, 
       icon: <PhoneIcon fontSize="small" color="secondary" />,
       copyable: true
     },
     { 
       label: 'Email Address', 
-      value: data.EMAIL_ADDRESS, 
+      value: data.email_address, 
       icon: <EmailIcon fontSize="small" color="secondary" />,
       copyable: true
     }
   ];
 
   const otherFields = [
-    { label: 'App ID', value: data.APPID },
-    { label: 'Name Format', value: data.NAME_FORMAT },
-    { label: 'Birth Name', value: data.BIRTH_NAME },
-    { label: 'Employment Status', value: data.STUD_MSTR_EMPLOY }
+    { label: 'App ID', value: data.appid },
+    { label: 'Name Format', value: data.name_format },
+    { label: 'Birth Name', value: data.birth_name },
+    { label: 'Employment Status', value: data.stud_mstr_employ }
   ];
 
   const handleCopy = (text) => {

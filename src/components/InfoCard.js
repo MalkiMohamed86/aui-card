@@ -18,13 +18,15 @@ import {
   alpha,
   useTheme,
   Snackbar,
-  Alert
+  Alert,
+  LinearProgress
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import BadgeIcon from '@mui/icons-material/Badge';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { calculateInfoProgress } from '../utils/progressCalculator';
 
 const InfoCard = ({ data }) => {
   const theme = useTheme();
@@ -34,6 +36,8 @@ const InfoCard = ({ data }) => {
   });
   
   if (!data) return null;
+
+  const progress = calculateInfoProgress(data);
 
   // full name format
   const fullName = `${data.first_name || ''} ${data.middle_name ? data.middle_name + ' ' : ''}${data.last_name || ''}`.trim();
@@ -114,18 +118,38 @@ const InfoCard = ({ data }) => {
             </Avatar>
           }
           title={
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                fontWeight: 'bold',
-                background: 'linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                textShadow: '0px 0px 1px rgba(79, 70, 229, 0.1)',
-              }}
-            >
-              AUI Personal Information
-            </Typography>
+            <Box>
+              <Typography 
+                variant="h6" 
+                sx={{ 
+                  fontWeight: 'bold',
+                  background: 'linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  textShadow: '0px 0px 1px rgba(79, 70, 229, 0.1)',
+                }}
+              >
+                AUI Personal Information
+              </Typography>
+              <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <LinearProgress 
+                  variant="determinate" 
+                  value={progress} 
+                  sx={{ 
+                    flexGrow: 1,
+                    height: 6,
+                    borderRadius: 3,
+                    bgcolor: alpha('#4f46e5', 0.1),
+                    '& .MuiLinearProgress-bar': {
+                      background: 'linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%)',
+                    }
+                  }}
+                />
+                <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 500 }}>
+                  {progress}%
+                </Typography>
+              </Box>
+            </Box>
           }
           subheader={
             <Box sx={{ mt: 1 }}>

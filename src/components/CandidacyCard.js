@@ -23,7 +23,8 @@ import {
   Grid,
   Button,
   Collapse,
-  IconButton
+  IconButton,
+  LinearProgress
 } from '@mui/material';
 import WorkIcon from '@mui/icons-material/Work';
 import SchoolIcon from '@mui/icons-material/School';
@@ -35,6 +36,7 @@ import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { calculateCandidacyProgress } from '../utils/progressCalculator';
 
 const CandidacyCard = ({ data, fullScreen = false }) => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -58,6 +60,8 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
   };
 
   if (!data || data.length === 0) return null;
+
+  const progress = calculateCandidacyProgress(data);
 
   // Handle tab change for records
   const handleTabChange = (event, newValue) => {
@@ -121,7 +125,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
     },
     { label: 'Country', value: data[selectedTab].country },
     { label: 'Address', value: data[selectedTab].addressLine1 },
-    { label: 'Birth Name', value: data[selectedTab].BIRTH_NAME },
+    { label: 'Birth Name', value: data[selectedTab].birthName },
     { label: 'First Name', value: data[selectedTab].firstName },
     { label: 'Last Name', value: data[selectedTab].lastName },
     { label: 'Email Address', value: data[selectedTab].emailAddress },
@@ -412,55 +416,61 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
               } 
             }}
           >
-            <Avatar sx={{ 
-              background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
-              width: 50, 
-              height: 50,
-              boxShadow: '0 4px 10px rgba(14, 165, 233, 0.2)',
-            }}>
+            <Avatar 
+              sx={{ 
+                background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
+                boxShadow: '0 4px 10px rgba(14, 165, 233, 0.2)',
+              }}
+            >
               <WorkIcon fontSize="large" />
             </Avatar>
           </Badge>
         }
         title={
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              fontWeight: 'bold',
-              background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              textShadow: '0px 0px 1px rgba(14, 165, 233, 0.1)',
-            }}
-          >
-            AUI Candidacy Record
-          </Typography>
+          <Box>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontWeight: 'bold',
+                background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textShadow: '0px 0px 1px rgba(14, 165, 233, 0.1)',
+              }}
+            >
+              AUI Candidacy Information
+            </Typography>
+            <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <LinearProgress 
+                variant="determinate" 
+                value={progress} 
+                sx={{ 
+                  flexGrow: 1,
+                  height: 6,
+                  borderRadius: 3,
+                  bgcolor: alpha('#0ea5e9', 0.1),
+                  '& .MuiLinearProgress-bar': {
+                    background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
+                  }
+                }}
+              />
+              <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 500 }}>
+                {progress}%
+              </Typography>
+            </Box>
+          </Box>
         }
         subheader={
           <Box sx={{ mt: 1 }}>
             <Chip 
-              label={`Program: ${data[selectedTab].programCode || 'N/A'}`} 
-              size="small" 
-              variant="outlined" 
+              label={`ID: ${data[0]?.idNum || 'N/A'}`} 
               sx={{ 
-                mr: 1,
-                fontWeight: 500,
-                borderRadius: '6px',
-                color: '#0369a1',
-                borderColor: alpha('#0ea5e9', 0.3),
-              }}
-            />
-            <Chip 
-              label={`Stage: ${data[selectedTab].stage || 'N/A'}`} 
-              size="small" 
-              sx={{ 
-                mt: { xs: 1, sm: 0 },
                 fontWeight: 500,
                 borderRadius: '6px',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-                bgcolor: alpha(getStageColor(data[selectedTab].stage), 0.1),
-                color: getStageColor(data[selectedTab].stage),
-                border: `1px solid ${alpha(getStageColor(data[selectedTab].stage), 0.2)}`,
+                bgcolor: alpha('#0ea5e9', 0.1),
+                color: '#0369a1',
+                border: '1px solid ' + alpha('#0ea5e9', 0.2),
               }}
             />
           </Box>

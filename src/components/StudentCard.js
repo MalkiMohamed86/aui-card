@@ -15,16 +15,20 @@ import {
   Chip,
   Stack,
   alpha,
-  useTheme
+  useTheme,
+  LinearProgress
 } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import GradeIcon from '@mui/icons-material/Grade';
+import { calculateStudentProgress } from '../utils/progressCalculator';
 
 const StudentCard = ({ data }) => {
   const theme = useTheme();
   
   if (!data) return null;
+
+  const progress = calculateStudentProgress(data);
 
   const fields = [
     { label: 'ID Number', value: data.idNum, icon: <AssignmentIcon fontSize="small" color="primary" /> },
@@ -78,18 +82,38 @@ const StudentCard = ({ data }) => {
           </Avatar>
         }
         title={
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              fontWeight: 'bold',
-              background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              textShadow: '0px 0px 1px rgba(14, 165, 233, 0.1)',
-            }}
-          >
-            AUI Student Record
-          </Typography>
+          <Box>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontWeight: 'bold',
+                background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textShadow: '0px 0px 1px rgba(14, 165, 233, 0.1)',
+              }}
+            >
+              AUI Student Record
+            </Typography>
+            <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <LinearProgress 
+                variant="determinate" 
+                value={progress} 
+                sx={{ 
+                  flexGrow: 1,
+                  height: 6,
+                  borderRadius: 3,
+                  bgcolor: alpha('#0ea5e9', 0.1),
+                  '& .MuiLinearProgress-bar': {
+                    background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
+                  }
+                }}
+              />
+              <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 500 }}>
+                {progress}%
+              </Typography>
+            </Box>
+          </Box>
         }
         subheader={
           <Box sx={{ mt: 1 }}>

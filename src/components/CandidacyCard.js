@@ -150,13 +150,13 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
   // Get stage color
   const getStageColor = (stage) => {
     switch(stage) {
-      case 'ENR': return '#10b981';
-      case 'APPLU': return '#0ea5e9';
-      case 'READM': return '#f59e0b';
-      case 'NELG': return '#ef4444';
-      case 'UFUM': return '#4f46e5';
-      case 'ADM': return '#10b981';
-      default: return '#94a3b8';
+      case 'ENR': return '#2e7d32';
+      case 'APPLU': return '#2b6cb0';
+      case 'READM': return '#ed8936';
+      case 'NELG': return '#c53030';
+      case 'UFUM': return '#4a5568';
+      case 'ADM': return '#2e7d32';
+      default: return '#a0aec0';
     }
   };
 
@@ -165,7 +165,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
     <Box sx={{ p: 2 }}>
       <Typography variant="subtitle1" sx={{ 
         fontWeight: 600, 
-        color: '#0369a1', 
+        color: '#00712D', 
         mb: 1.5,
         display: 'flex',
         alignItems: 'center',
@@ -174,18 +174,19 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
           display: 'block',
           height: '2px',
           width: '30px',
-          background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
+          background: '#00712D',
           marginLeft: '8px',
           borderRadius: '2px',
         }
       }}>
-        {icon && <Box sx={{ mr: 1, color: '#0ea5e9' }}>{icon}</Box>}
+        {icon && <Box sx={{ mr: 1, color: '#00712D' }}>{icon}</Box>}
         {title}
       </Typography>
       <TableContainer sx={{ 
-        backgroundColor: alpha(theme.palette.background.paper, 0.6),
-        borderRadius: '12px',
+        backgroundColor: '#ffffff',
+        borderRadius: '8px',
         overflow: 'hidden',
+        border: '1px solid #e2e8f0',
       }}>
         <Table size="small">
           <TableBody>
@@ -193,7 +194,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
               field.value && (
                 <TableRow key={field.label} sx={{ 
                   '&:last-child td, &:last-child th': { border: 0 },
-                  '&:hover': { backgroundColor: alpha('#0ea5e9', 0.04) },
+                  '&:hover': { backgroundColor: '#f8fafc' },
                   transition: 'background-color 0.2s ease',
                 }}>
                   <TableCell 
@@ -202,8 +203,8 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
                     sx={{ 
                       fontWeight: 500, 
                       pl: 1.5,
-                      color: '#64748b',
-                      borderBottom: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                      color: '#4a5568',
+                      borderBottom: `1px solid #e2e8f0`,
                       width: '40%',
                     }}
                   >
@@ -217,8 +218,8 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
                     sx={{ 
                       pr: 1.5,
                       fontWeight: 500,
-                      color: '#334155',
-                      borderBottom: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                      color: '#2d3748',
+                      borderBottom: `1px solid #e2e8f0`,
                       width: '60%',
                     }}
                   >
@@ -231,14 +232,14 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
                           borderRadius: '6px',
                           boxShadow: field.label === 'Stage' ? '0 2px 8px rgba(0, 0, 0, 0.08)' : 'none',
                           bgcolor: field.label === 'GPA' && field.value ? 
-                            (parseFloat(field.value) >= 3.0 ? alpha('#10b981', 0.1) : alpha('#f59e0b', 0.1)) : 
-                            alpha(getStageColor(field.value), 0.1),
+                            (parseFloat(field.value) >= 3.0 ? 'rgba(46, 125, 50, 0.1)' : 'rgba(237, 137, 54, 0.1)') : 
+                            '#edf2f7',
                           color: field.label === 'GPA' && field.value ? 
-                            (parseFloat(field.value) >= 3.0 ? '#047857' : '#b45309') : 
+                            (parseFloat(field.value) >= 3.0 ? '#2e7d32' : '#ed8936') : 
                             getStageColor(field.value),
                           border: field.label === 'GPA' && field.value ? 
-                            (parseFloat(field.value) >= 3.0 ? `1px solid ${alpha('#10b981', 0.2)}` : `1px solid ${alpha('#f59e0b', 0.2)}`) : 
-                            `1px solid ${alpha(getStageColor(field.value), 0.2)}`,
+                            (parseFloat(field.value) >= 3.0 ? '1px solid rgba(46, 125, 50, 0.2)' : '1px solid rgba(237, 137, 54, 0.2)') : 
+                            '1px solid #e2e8f0',
                         }}
                       />
                     ) : field.value}
@@ -263,7 +264,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
           <Typography variant="subtitle1" sx={{ 
             fontWeight: 600, 
-            color: '#0369a1', 
+            color: '#00712D', 
             display: 'flex',
             alignItems: 'center',
             '&::after': {
@@ -271,12 +272,12 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
               display: 'block',
               height: '2px',
               width: '30px',
-              background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
+              background: '#00712D',
               marginLeft: '8px',
               borderRadius: '2px',
             }
           }}>
-            {icon && <Box sx={{ mr: 1, color: '#0ea5e9' }}>{icon}</Box>}
+            {icon && <Box sx={{ mr: 1, color: '#00712D' }}>{icon}</Box>}
             {title}
           </Typography>
           {hasMore && (
@@ -284,10 +285,10 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
               size="small" 
               onClick={() => toggleSection(sectionKey)}
               sx={{ 
-                color: '#0ea5e9',
-                backgroundColor: alpha('#0ea5e9', 0.05),
+                color: '#00712D',
+                backgroundColor: 'rgba(0, 113, 45, 0.1)',
                 '&:hover': {
-                  backgroundColor: alpha('#0ea5e9', 0.1),
+                  backgroundColor: 'rgba(0, 113, 45, 0.2)',
                 }
               }}
             >
@@ -296,9 +297,10 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
           )}
         </Box>
         <TableContainer sx={{ 
-          backgroundColor: alpha(theme.palette.background.paper, 0.6),
-          borderRadius: '12px',
+          backgroundColor: '#ffffff',
+          borderRadius: '8px',
           overflow: 'hidden',
+          border: '1px solid #e2e8f0',
         }}>
           <Table size="small">
             <TableBody>
@@ -306,7 +308,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
                 field.value && (
                   <TableRow key={field.label} sx={{ 
                     '&:last-child td, &:last-child th': { border: 0 },
-                    '&:hover': { backgroundColor: alpha('#0ea5e9', 0.04) },
+                    '&:hover': { backgroundColor: '#f8fafc' },
                     transition: 'background-color 0.2s ease',
                   }}>
                     <TableCell 
@@ -315,8 +317,8 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
                       sx={{ 
                         fontWeight: 500, 
                         pl: 1.5,
-                        color: '#64748b',
-                        borderBottom: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                        color: '#4a5568',
+                        borderBottom: `1px solid #e2e8f0`,
                         width: '40%',
                       }}
                     >
@@ -330,8 +332,8 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
                       sx={{ 
                         pr: 1.5,
                         fontWeight: 500,
-                        color: '#334155',
-                        borderBottom: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                        color: '#2d3748',
+                        borderBottom: `1px solid #e2e8f0`,
                         width: '60%',
                       }}
                     >
@@ -344,14 +346,14 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
                             borderRadius: '6px',
                             boxShadow: field.label === 'Stage' ? '0 2px 8px rgba(0, 0, 0, 0.08)' : 'none',
                             bgcolor: field.label === 'GPA' && field.value ? 
-                              (parseFloat(field.value) >= 3.0 ? alpha('#10b981', 0.1) : alpha('#f59e0b', 0.1)) : 
-                              alpha(getStageColor(field.value), 0.1),
+                              (parseFloat(field.value) >= 3.0 ? 'rgba(46, 125, 50, 0.1)' : 'rgba(237, 137, 54, 0.1)') : 
+                              '#edf2f7',
                             color: field.label === 'GPA' && field.value ? 
-                              (parseFloat(field.value) >= 3.0 ? '#047857' : '#b45309') : 
+                              (parseFloat(field.value) >= 3.0 ? '#2e7d32' : '#ed8936') : 
                               getStageColor(field.value),
                             border: field.label === 'GPA' && field.value ? 
-                              (parseFloat(field.value) >= 3.0 ? `1px solid ${alpha('#10b981', 0.2)}` : `1px solid ${alpha('#f59e0b', 0.2)}`) : 
-                              `1px solid ${alpha(getStageColor(field.value), 0.2)}`,
+                              (parseFloat(field.value) >= 3.0 ? '1px solid rgba(46, 125, 50, 0.2)' : '1px solid rgba(237, 137, 54, 0.2)') : 
+                              '1px solid #e2e8f0',
                           }}
                         />
                       ) : field.value}
@@ -370,9 +372,9 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
               endIcon={<KeyboardArrowDownIcon />}
               sx={{ 
                 textTransform: 'none',
-                color: '#0ea5e9',
+                color: '#2e7d32',
                 '&:hover': {
-                  backgroundColor: alpha('#0ea5e9', 0.05),
+                  backgroundColor: 'rgba(46, 125, 50, 0.1)',
                 }
               }}
             >
@@ -389,16 +391,14 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
       elevation={0} 
       sx={{ 
         height: '100%', 
-        boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
-        borderRadius: '16px',
+        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
+        borderRadius: '8px',
         overflow: 'hidden',
-        transition: 'all 0.3s ease',
-        backgroundColor: 'rgba(248, 250, 252, 0.95)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(100, 116, 139, 0.08)',
+        backgroundColor: '#ffffff',
+        border: '1px solid #e2e8f0',
         '&:hover': {
           transform: 'translateY(-5px)',
-          boxShadow: 'rgba(0, 0, 0, 0.06) 0px 10px 30px, rgba(0, 0, 0, 0.04) 0px 0px 0px 1px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
         }
       }}
     >
@@ -412,14 +412,14 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
                 minWidth: '22px',
                 fontWeight: 600,
                 boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-                bgcolor: '#0ea5e9',
+                bgcolor: '#00712D',
               } 
             }}
           >
             <Avatar 
               sx={{ 
-                background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
-                boxShadow: '0 4px 10px rgba(14, 165, 233, 0.2)',
+                background: '#00712D',
+                boxShadow: '0 4px 10px rgba(0, 113, 45, 0.2)',
               }}
             >
               <WorkIcon fontSize="large" />
@@ -432,10 +432,7 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
               variant="h6" 
               sx={{ 
                 fontWeight: 'bold',
-                background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                textShadow: '0px 0px 1px rgba(14, 165, 233, 0.1)',
+                color: '#00712D',
               }}
             >
               AUI Candidacy Information
@@ -448,13 +445,13 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
                   flexGrow: 1,
                   height: 6,
                   borderRadius: 3,
-                  bgcolor: alpha('#0ea5e9', 0.1),
+                  bgcolor: '#edf2f7',
                   '& .MuiLinearProgress-bar': {
-                    background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
+                    backgroundColor: '#00712D',
                   }
                 }}
               />
-              <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 500 }}>
+              <Typography variant="caption" sx={{ color: '#4a5568', fontWeight: 500 }}>
                 {progress}%
               </Typography>
             </Box>
@@ -468,17 +465,18 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
                 fontWeight: 500,
                 borderRadius: '6px',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-                bgcolor: alpha('#0ea5e9', 0.1),
-                color: '#0369a1',
-                border: '1px solid ' + alpha('#0ea5e9', 0.2),
+                bgcolor: '#edf2f7',
+                color: '#2e7d32',
+                border: '1px solid #e2e8f0',
               }}
             />
           </Box>
         }
         sx={{ 
           pb: 0,
-          backgroundColor: alpha('#0ea5e9', 0.03),
-          borderBottom: '1px solid rgba(100, 116, 139, 0.08)'
+          backgroundColor: '#f8fafc',
+          borderBottom: '1px solid #e2e8f0',
+          borderLeft: '4px solid #2e7d32'
         }}
       />
       
@@ -496,15 +494,15 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
               fontWeight: 'medium',
               textTransform: 'none',
               borderRadius: '8px 8px 0 0',
-              color: '#64748b',
+              color: '#4a5568',
             },
             '& .Mui-selected': {
               fontWeight: 'bold',
-              color: '#0ea5e9',
-              backgroundColor: alpha('#0ea5e9', 0.08),
+              color: '#2e7d32',
+              backgroundColor: 'rgba(46, 125, 50, 0.1)',
             },
             '& .MuiTabs-indicator': {
-              backgroundColor: '#0ea5e9',
+              backgroundColor: '#2e7d32',
               height: 3,
               borderRadius: '3px 3px 0 0',
             }
@@ -531,14 +529,14 @@ const CandidacyCard = ({ data, fullScreen = false }) => {
               fontWeight: 'medium',
               textTransform: 'none',
               py: 1.5,
-              color: '#64748b',
+              color: '#4a5568',
             },
             '& .Mui-selected': {
               fontWeight: 'bold',
-              color: '#0ea5e9',
+              color: '#2e7d32',
             },
             '& .MuiTabs-indicator': {
-              backgroundColor: '#0ea5e9',
+              backgroundColor: '#2e7d32',
               height: 3,
               borderRadius: '3px 3px 0 0',
             }

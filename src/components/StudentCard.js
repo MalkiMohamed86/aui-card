@@ -57,16 +57,15 @@ const StudentCard = ({ data }) => {
       elevation={0} 
       sx={{ 
         height: '100%', 
-        boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
-        borderRadius: '16px',
+        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
+        borderRadius: '8px',
         overflow: 'hidden',
         transition: 'all 0.3s ease',
-        backgroundColor: 'rgba(248, 250, 252, 0.95)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(100, 116, 139, 0.08)',
+        backgroundColor: '#ffffff',
+        border: '1px solid #e2e8f0',
         '&:hover': {
           transform: 'translateY(-5px)',
-          boxShadow: 'rgba(0, 0, 0, 0.06) 0px 10px 30px, rgba(0, 0, 0, 0.04) 0px 0px 0px 1px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
         }
       }}
     >
@@ -74,8 +73,8 @@ const StudentCard = ({ data }) => {
         avatar={
           <Avatar 
             sx={{ 
-              background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
-              boxShadow: '0 4px 10px rgba(14, 165, 233, 0.2)',
+              background: '#00712D',
+              boxShadow: '0 4px 10px rgba(0, 113, 45, 0.2)',
             }}
           >
             <SchoolIcon fontSize="large" />
@@ -87,10 +86,7 @@ const StudentCard = ({ data }) => {
               variant="h6" 
               sx={{ 
                 fontWeight: 'bold',
-                background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                textShadow: '0px 0px 1px rgba(14, 165, 233, 0.1)',
+                color: '#00712D',
               }}
             >
               AUI Student Record
@@ -103,13 +99,13 @@ const StudentCard = ({ data }) => {
                   flexGrow: 1,
                   height: 6,
                   borderRadius: 3,
-                  bgcolor: alpha('#0ea5e9', 0.1),
+                  bgcolor: '#edf2f7',
                   '& .MuiLinearProgress-bar': {
-                    background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%)',
+                    backgroundColor: '#00712D',
                   }
                 }}
               />
-              <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 500 }}>
+              <Typography variant="caption" sx={{ color: '#4a5568', fontWeight: 500 }}>
                 {progress}%
               </Typography>
             </Box>
@@ -123,41 +119,42 @@ const StudentCard = ({ data }) => {
                 fontWeight: 500,
                 borderRadius: '6px',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-                bgcolor: alpha('#0ea5e9', 0.1),
-                color: '#0369a1',
-                border: '1px solid ' + alpha('#0ea5e9', 0.2),
+                bgcolor: '#edf2f7',
+                color: '#0f3460',
+                border: '1px solid #e2e8f0',
               }}
             />
           </Box>
         }
         sx={{ 
           pb: 0,
-          backgroundColor: alpha('#0ea5e9', 0.03),
-          borderBottom: '1px solid rgba(100, 116, 139, 0.08)'
+          backgroundColor: '#f8fafc',
+          borderBottom: '1px solid #e2e8f0',
+          borderLeft: '4px solid #0f3460'
         }}
       />
       
       <CardContent sx={{ p: 0 }}>
         <Box sx={{ p: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#0369a1', mb: 1 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#0f3460', mb: 1 }}>
             Identification
           </Typography>
           <TableContainer>
             <Table size="small">
               <TableBody>
                 {identificationFields.map((field) => (
-                  field.value && (
+                  (field.value !== null && field.value !== undefined && (field.value !== '' || field.value === 0)) && (
                     <TableRow key={field.label} sx={{ 
                       '&:last-child td, &:last-child th': { border: 0 },
-                      '&:hover': { backgroundColor: 'rgba(14, 165, 233, 0.04)' }
+                      '&:hover': { backgroundColor: '#f8fafc' }
                     }}>
-                      <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#64748b' }}>
+                      <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#4a5568' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           {field.icon && <Box sx={{ mr: 1 }}>{field.icon}</Box>}
                           {field.label}
                         </Box>
                       </TableCell>
-                      <TableCell align="right" sx={{ pr: 1, color: '#334155' }}>{field.value}</TableCell>
+                      <TableCell align="right" sx={{ pr: 1, color: '#2d3748' }}>{field.value}</TableCell>
                     </TableRow>
                   )
                 ))}
@@ -169,25 +166,25 @@ const StudentCard = ({ data }) => {
         <Divider />
         
         <Box sx={{ p: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#0369a1', mb: 1 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#0f3460', mb: 1 }}>
             Enrollment
           </Typography>
           <TableContainer>
             <Table size="small">
               <TableBody>
                 {enrollmentFields.map((field) => (
-                  field.value && (
+                  (field.value !== null && field.value !== undefined && (field.value !== '' || field.value === 0)) && (
                     <TableRow key={field.label} sx={{ 
                       '&:last-child td, &:last-child th': { border: 0 },
-                      '&:hover': { backgroundColor: 'rgba(14, 165, 233, 0.04)' }
+                      '&:hover': { backgroundColor: '#f8fafc' }
                     }}>
-                      <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#64748b' }}>
+                      <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#4a5568' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           {field.icon && <Box sx={{ mr: 1 }}>{field.icon}</Box>}
                           {field.label}
                         </Box>
                       </TableCell>
-                      <TableCell align="right" sx={{ pr: 1, color: '#334155' }}>{field.value}</TableCell>
+                      <TableCell align="right" sx={{ pr: 1, color: '#2d3748' }}>{field.value}</TableCell>
                     </TableRow>
                   )
                 ))}
@@ -199,36 +196,36 @@ const StudentCard = ({ data }) => {
         <Divider />
         
         <Box sx={{ p: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#0369a1', mb: 1 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#0f3460', mb: 1 }}>
             Academic Information
           </Typography>
           <TableContainer>
             <Table size="small">
               <TableBody>
                 {academicFields.map((field) => (
-                  field.value && (
+                  (field.value !== null && field.value !== undefined && (field.value !== '' || field.value === 0)) && (
                     <TableRow key={field.label} sx={{ 
                       '&:last-child td, &:last-child th': { border: 0 },
-                      '&:hover': { backgroundColor: 'rgba(14, 165, 233, 0.04)' }
+                      '&:hover': { backgroundColor: '#f8fafc' }
                     }}>
-                      <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#64748b' }}>
+                      <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#4a5568' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           {field.icon && <Box sx={{ mr: 1 }}>{field.icon}</Box>}
                           {field.label}
                         </Box>
                       </TableCell>
-                      <TableCell align="right" sx={{ pr: 1, color: '#334155' }}>
+                      <TableCell align="right" sx={{ pr: 1, color: '#2d3748' }}>
                         {field.label === 'Career GPA' ? (
                           <Chip 
                             label={field.value} 
                             color={parseFloat(field.value) >= 3.0 ? "success" : "warning"}
                             size="small"
                             sx={{
-                              bgcolor: parseFloat(field.value) >= 3.0 ? alpha('#10b981', 0.1) : alpha('#f59e0b', 0.1),
-                              color: parseFloat(field.value) >= 3.0 ? '#047857' : '#b45309',
+                              bgcolor: parseFloat(field.value) >= 3.0 ? 'rgba(46, 125, 50, 0.1)' : 'rgba(237, 137, 54, 0.1)',
+                              color: parseFloat(field.value) >= 3.0 ? '#2e7d32' : '#ed8936',
                               border: parseFloat(field.value) >= 3.0 ? 
-                                `1px solid ${alpha('#10b981', 0.2)}` : 
-                                `1px solid ${alpha('#f59e0b', 0.2)}`,
+                                '1px solid rgba(46, 125, 50, 0.2)' : 
+                                '1px solid rgba(237, 137, 54, 0.2)',
                               fontWeight: 600
                             }}
                           />

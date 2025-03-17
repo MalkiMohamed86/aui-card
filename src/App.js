@@ -13,6 +13,7 @@ import {
   FormControlLabel,
   Switch,
   CircularProgress,
+  LinearProgress,
   ThemeProvider,
   createTheme,
   CssBaseline,
@@ -46,6 +47,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { CircularProgressProps } from '@mui/material/CircularProgress';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -54,60 +56,65 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import testData from './data.json';
 
 // components
 import StudentCard from './components/StudentCard';
 import InfoCard from './components/InfoCard';
 import CandidacyCard from './components/CandidacyCard';
 import Login from './pages/Login';
+import Progress from './components/Progress';
+import Overview from './components/Overview';
 
-// Create a custom theme
+// Create a theme instance
 const theme = createTheme({
   palette: {
-    mode: 'light',
     primary: {
-      main: '#2563eb', // Modern blue
-      light: '#60a5fa',
-      dark: '#1e40af',
+      main: '#0f3460',
+      light: '#2c5282',
+      dark: '#0c2348',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#4f46e5', // Indigo
-      light: '#818cf8',
-      dark: '#3730a3',
+      main: '#4a5568',
+      light: '#718096',
+      dark: '#2d3748',
       contrastText: '#ffffff',
     },
     success: {
-      main: '#10b981', // Emerald green
-      light: '#34d399',
-      dark: '#059669',
+      main: '#2e7d32',
+      light: '#4caf50',
+      dark: '#1b5e20',
       contrastText: '#ffffff',
     },
     error: {
-      main: '#ef4444', // Modern red
-      light: '#f87171',
-      dark: '#b91c1c',
+      main: '#c53030',
+      light: '#e53e3e',
+      dark: '#9b2c2c',
+      contrastText: '#ffffff',
     },
     warning: {
-      main: '#f59e0b', // Amber
-      light: '#fbbf24',
-      dark: '#d97706',
+      main: '#ed8936',
+      light: '#f6ad55',
+      dark: '#c05621',
+      contrastText: '#ffffff',
     },
     info: {
-      main: '#0ea5e9', // Sky blue
-      light: '#38bdf8',
-      dark: '#0284c7',
-    },
-    background: {
-      default: '#f0f4f8', // Very light blue-gray
-      paper: '#ffffff',
+      main: '#2b6cb0',
+      light: '#4299e1',
+      dark: '#2c5282',
+      contrastText: '#ffffff',
     },
     text: {
-      primary: '#1e293b', // Slate 800
-      secondary: '#64748b', // Slate 500
-      disabled: '#94a3b8', // Slate 400
+      primary: '#2d3748',
+      secondary: '#4a5568',
+      disabled: '#a0aec0',
     },
-    divider: 'rgba(100, 116, 139, 0.12)',
+    background: {
+      default: '#f7fafc',
+      paper: '#ffffff',
+    },
+    divider: '#e2e8f0',
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
@@ -115,110 +122,135 @@ const theme = createTheme({
       fontWeight: 700,
       fontSize: '2.5rem',
       lineHeight: 1.2,
-      letterSpacing: '-0.01em',
     },
     h2: {
       fontWeight: 700,
       fontSize: '2rem',
       lineHeight: 1.2,
-      letterSpacing: '-0.01em',
     },
     h3: {
-      fontWeight: 600,
+      fontWeight: 700,
       fontSize: '1.75rem',
       lineHeight: 1.2,
-      letterSpacing: '-0.01em',
     },
     h4: {
-      fontWeight: 600,
+      fontWeight: 700,
       fontSize: '1.5rem',
       lineHeight: 1.2,
-      letterSpacing: '-0.01em',
     },
     h5: {
       fontWeight: 600,
       fontSize: '1.25rem',
       lineHeight: 1.2,
-      letterSpacing: '-0.01em',
     },
     h6: {
       fontWeight: 600,
       fontSize: '1rem',
       lineHeight: 1.2,
-      letterSpacing: '-0.01em',
     },
     subtitle1: {
       fontWeight: 500,
       fontSize: '1rem',
       lineHeight: 1.5,
-      letterSpacing: '0.00938em',
     },
     subtitle2: {
       fontWeight: 500,
       fontSize: '0.875rem',
-      lineHeight: 1.5,
-      letterSpacing: '0.00714em',
+      lineHeight: 1.57,
     },
     body1: {
       fontWeight: 400,
       fontSize: '1rem',
       lineHeight: 1.5,
-      letterSpacing: '0.00938em',
     },
     body2: {
       fontWeight: 400,
       fontSize: '0.875rem',
-      lineHeight: 1.5,
-      letterSpacing: '0.00714em',
+      lineHeight: 1.57,
     },
     button: {
       fontWeight: 600,
       fontSize: '0.875rem',
       lineHeight: 1.75,
-      letterSpacing: '0.02857em',
       textTransform: 'none',
+    },
+    caption: {
+      fontWeight: 400,
+      fontSize: '0.75rem',
+      lineHeight: 1.66,
+    },
+    overline: {
+      fontWeight: 600,
+      fontSize: '0.75rem',
+      lineHeight: 2.66,
+      textTransform: 'uppercase',
     },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 8,
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
+        '*': {
+          boxSizing: 'border-box',
+          margin: 0,
+          padding: 0,
+        },
+        html: {
+          MozOsxFontSmoothing: 'grayscale',
+          WebkitFontSmoothing: 'antialiased',
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100%',
+          width: '100%',
+        },
         body: {
-          scrollbarWidth: 'thin',
-          '&::-webkit-scrollbar': {
-            width: '8px',
-            height: '8px',
-          },
-          '&::-webkit-scrollbar-track': {
-            background: '#f1f1f1',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            background: '#c1c1c1',
-            borderRadius: '4px',
-          },
-          '&::-webkit-scrollbar-thumb:hover': {
-            background: '#a1a1a1',
-          },
+          display: 'flex',
+          flex: '1 1 auto',
+          flexDirection: 'column',
+          minHeight: '100%',
+          width: '100%',
+          backgroundColor: '#f8fafc',
+        },
+        '#root': {
+          display: 'flex',
+          flex: '1 1 auto',
+          flexDirection: 'column',
+          height: '100%',
+          width: '100%',
+        },
+        '::-webkit-scrollbar': {
+          width: '8px',
+          height: '8px',
+        },
+        '::-webkit-scrollbar-track': {
+          background: '#f1f5f9',
+        },
+        '::-webkit-scrollbar-thumb': {
+          background: '#c1c1c1',
+          borderRadius: '4px',
+        },
+        '::-webkit-scrollbar-thumb:hover': {
+          background: '#a1a1a1',
         },
       },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: 16,
-          boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
+          borderRadius: 8,
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
         },
         elevation1: {
-          boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
         },
       },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 10,
+          borderRadius: 8,
           textTransform: 'none',
           fontWeight: 600,
           boxShadow: 'none',
@@ -237,9 +269,10 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 16,
-          boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
+          borderRadius: 8,
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
           overflow: 'hidden',
+          border: '1px solid #e5e7eb',
         },
       },
     },
@@ -263,24 +296,24 @@ const theme = createTheme({
     MuiInputBase: {
       styleOverrides: {
         root: {
-          borderRadius: 10,
+          borderRadius: 8,
         },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          borderRadius: 10,
+          borderRadius: 8,
           '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#2563eb',
+            borderColor: '#1e40af',
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#2563eb',
+            borderColor: '#1e40af',
             borderWidth: 2,
           },
         },
         notchedOutline: {
-          borderColor: 'rgba(100, 116, 139, 0.2)',
+          borderColor: '#e5e7eb',
         },
       },
     },
@@ -291,34 +324,35 @@ const theme = createTheme({
           fontWeight: 500,
           textTransform: 'none',
           '&.Mui-selected': {
-            backgroundColor: alpha('#2563eb', 0.1),
-            color: '#2563eb',
+            backgroundColor: '#eff6ff',
+            color: '#1e40af',
             '&:hover': {
-              backgroundColor: alpha('#2563eb', 0.15),
+              backgroundColor: '#dbeafe',
             },
           },
         },
       },
     },
-    MuiDivider: {
+    MuiLinearProgress: {
       styleOverrides: {
         root: {
-          borderColor: 'rgba(100, 116, 139, 0.12)',
+          borderRadius: 3,
+          height: 6,
         },
       },
     },
-    MuiTableCell: {
+    MuiChip: {
       styleOverrides: {
         root: {
-          borderBottom: '1px solid rgba(100, 116, 139, 0.12)',
+          fontWeight: 500,
         },
       },
     },
-    MuiAppBar: {
+    MuiTab: {
       styleOverrides: {
         root: {
-          boxShadow: 'none',
-          borderBottom: '1px solid rgba(100, 116, 139, 0.12)',
+          fontWeight: 500,
+          textTransform: 'none',
         },
       },
     },
@@ -345,6 +379,7 @@ function Dashboard() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const resultsPerPage = 5;
+  const [activeView, setActiveView] = useState('search');
   
   const handleLogout = () => {
     logout();
@@ -363,49 +398,28 @@ function Dashboard() {
     setMultipleResults(null);
     
     try {
-      const response = await axios.post(`https://tour.aui.ma/api/student`, {
-        id: searchQuery,
-        page: currentPage,
-        limit: resultsPerPage
-      }, {
-        withCredentials: true, // for handling cookies
-        headers: {
-          "Content-Type": "application/json", 
-          "Accept": "application/json"
-        }
-      }
-    );
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Use test data instead of API call
+      const response = testData;
 
       setHasSearched(true);
       
       if (response.data) {
-        if (response.data.type === 'name_search') {
-          // name search res with multi matches
-          if (response.data.matches.length === 0) {
-            setNoResults(true);
-            setSearchResults(null);
-          } else if (response.data.matches.length === 1) {
-            setSearchResults(response.data.matches[0]);
-          } else {
-            setMultipleResults(response.data.matches);
-            setTotalPages(response.data.pagination.totalPages);
-            setTotalResults(response.data.pagination.total);
-          }
+        // Check if the search query matches the ID in the test data
+        if (searchQuery === response.data.info.id_num.toString()) {
+          setSearchResults(response.data);
         } else {
-          // ID search res
-          if (response.data.data) {
-            setSearchResults(response.data);
-          } else {
-            setNoResults(true);
-            setSearchResults(null);
-          }
+          setNoResults(true);
+          setSearchResults(null);
         }
       } else {
-        setError(response.data.message || 'Error fetching data');
+        setError('Error fetching data');
       }
     } catch (err) {
       console.error('Error searching:', err);
-      setError(err.response?.data?.message || 'Error connecting to the server');
+      setError('Error processing the search');
       setHasSearched(true);
       setNoResults(false);
     } finally {
@@ -517,7 +531,8 @@ function Dashboard() {
         <List sx={{ px: 1 }} dense>
           <ListItem disablePadding>
             <ListItemButton 
-              selected={true}
+              selected={activeView === 'search'}
+              onClick={() => setActiveView('search')}
               sx={{ 
                 borderRadius: '8px',
                 mb: 0.5,
@@ -531,10 +546,67 @@ function Dashboard() {
               }}
             >
               <ListItemIcon sx={{ minWidth: 40 }}>
-                <DashboardIcon color="primary" fontSize="small" />
+                <DashboardIcon color={activeView === 'search' ? "primary" : "inherit"} fontSize="small" />
               </ListItemIcon>
               <ListItemText 
                 primary="Student Search" 
+                primaryTypographyProps={{ 
+                  fontSize: '0.95rem',
+                  fontWeight: activeView === 'search' ? 600 : 500
+                }} 
+              />
+            </ListItemButton>
+          </ListItem>
+          
+          <ListItem disablePadding>
+            <ListItemButton 
+              selected={activeView === 'progress'}
+              onClick={() => setActiveView('progress')}
+              sx={{ 
+                borderRadius: '8px',
+                mb: 0.5,
+                py: 1,
+                '&.Mui-selected': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  '&:hover': {
+                    backgroundColor: alpha(theme.palette.primary.main, 0.15),
+                  }
+                }
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <InfoOutlinedIcon color={activeView === 'progress' ? "primary" : "inherit"} fontSize="small" />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Progress Analysis" 
+                primaryTypographyProps={{ 
+                  fontSize: '0.95rem',
+                  fontWeight: activeView === 'progress' ? 600 : 500
+                }} 
+              />
+            </ListItemButton>
+          </ListItem>
+          
+          <ListItem disablePadding>
+            <ListItemButton 
+              onClick={() => navigate('/overview')}
+              sx={{ 
+                borderRadius: '8px',
+                mb: 0.5,
+                py: 1,
+                '&.Mui-selected': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  '&:hover': {
+                    backgroundColor: alpha(theme.palette.primary.main, 0.15),
+                  }
+                }
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <GridViewIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Student Overview" 
                 primaryTypographyProps={{ 
                   fontSize: '0.95rem',
                   fontWeight: 500
@@ -561,121 +633,7 @@ function Dashboard() {
         </Typography>
         
         <List sx={{ px: 1 }} dense>
-          <ListItem disablePadding>
-            <ListItemButton 
-              selected={activeCard === 'all'}
-              onClick={(e) => handleCardChange(e, 'all')}
-              sx={{ 
-                borderRadius: '8px',
-                mb: 0.5,
-                py: 1,
-                '&.Mui-selected': {
-                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                  '&:hover': {
-                    backgroundColor: alpha(theme.palette.primary.main, 0.15),
-                  }
-                }
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 40 }}>
-                <GridViewIcon color={activeCard === 'all' ? 'primary' : 'inherit'} fontSize="small" />
-              </ListItemIcon>
-              <ListItemText 
-                primary="All Records" 
-                primaryTypographyProps={{ 
-                  fontSize: '0.95rem',
-                  fontWeight: activeCard === 'all' ? 500 : 400
-                }} 
-              />
-            </ListItemButton>
-          </ListItem>
-          
-          <ListItem disablePadding>
-            <ListItemButton 
-              selected={activeCard === 'student'}
-              onClick={(e) => handleCardChange(e, 'student')}
-              sx={{ 
-                borderRadius: '8px',
-                mb: 0.5,
-                py: 1,
-                '&.Mui-selected': {
-                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                  '&:hover': {
-                    backgroundColor: alpha(theme.palette.primary.main, 0.15),
-                  }
-                }
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 40 }}>
-                <SchoolIcon color={activeCard === 'student' ? 'primary' : 'inherit'} fontSize="small" />
-              </ListItemIcon>
-              <ListItemText 
-                primary="Student" 
-                primaryTypographyProps={{ 
-                  fontSize: '0.95rem',
-                  fontWeight: activeCard === 'student' ? 500 : 400
-                }} 
-              />
-            </ListItemButton>
-          </ListItem>
-          
-          <ListItem disablePadding>
-            <ListItemButton 
-              selected={activeCard === 'info'}
-              onClick={(e) => handleCardChange(e, 'info')}
-              sx={{ 
-                borderRadius: '8px',
-                mb: 0.5,
-                py: 1,
-                '&.Mui-selected': {
-                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                  '&:hover': {
-                    backgroundColor: alpha(theme.palette.primary.main, 0.15),
-                  }
-                }
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 40 }}>
-                <PersonIcon color={activeCard === 'info' ? 'primary' : 'inherit'} fontSize="small" />
-              </ListItemIcon>
-              <ListItemText 
-                primary="Personal Info" 
-                primaryTypographyProps={{ 
-                  fontSize: '0.95rem',
-                  fontWeight: activeCard === 'info' ? 500 : 400
-                }} 
-              />
-            </ListItemButton>
-          </ListItem>
-          
-          <ListItem disablePadding>
-            <ListItemButton 
-              selected={activeCard === 'candidacy'}
-              onClick={(e) => handleCardChange(e, 'candidacy')}
-              sx={{ 
-                borderRadius: '8px',
-                mb: 0.5,
-                py: 1,
-                '&.Mui-selected': {
-                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                  '&:hover': {
-                    backgroundColor: alpha(theme.palette.primary.main, 0.15),
-                  }
-                }
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 40 }}>
-                <WorkIcon color={activeCard === 'candidacy' ? 'primary' : 'inherit'} fontSize="small" />
-              </ListItemIcon>
-              <ListItemText 
-                primary="Candidacy" 
-                primaryTypographyProps={{ 
-                  fontSize: '0.95rem',
-                  fontWeight: activeCard === 'candidacy' ? 500 : 400
-                }} 
-              />
-            </ListItemButton>
-          </ListItem>
+          {/* ... existing list items ... */}
         </List>
       </Box>
       
@@ -717,7 +675,7 @@ function Dashboard() {
       <Box sx={{ 
         display: 'flex', 
         minHeight: '100vh',
-        background: 'linear-gradient(180deg, rgba(219, 234, 254, 0.3) 0%, rgba(248, 250, 252, 1) 100%)',
+        background: 'linear-gradient(180deg, rgba(239, 246, 255, 0.3) 0%, rgba(248, 250, 252, 1) 100%)',
       }}>
         {/* Sidebar for desktop */}
         <Drawer
@@ -774,7 +732,7 @@ function Dashboard() {
               },
               display: 'flex',
               flexDirection: 'column',
-              backgroundColor: 'rgba(240, 245, 250, 0.5)',
+              backgroundColor: '#f8fafc',
               width: '100%',
               alignItems: 'center',
             }}>
@@ -826,10 +784,10 @@ function Dashboard() {
                         sx={{ 
                           display: 'flex',
                           alignItems: 'center',
-                          bgcolor: 'rgba(219, 234, 254, 0.4)', 
+                          bgcolor: 'rgba(15, 52, 96, 0.1)', 
                           p: 0.8, 
                           borderRadius: '8px',
-                          boxShadow: '0 2px 5px rgba(37, 99, 235, 0.1)',
+                          boxShadow: '0 2px 5px rgba(15, 52, 96, 0.1)',
                         }}
                       >
                         <img 
@@ -855,18 +813,18 @@ function Dashboard() {
                           fontSize: '1.25rem'
                         }}
                       >
-                        Student Information System
+                        {activeView === 'search' ? 'Student Information System' : 'Record Completion Analysis'}
                       </Typography>
                       <Typography 
                         variant="subtitle2" 
                         sx={{ 
-                          color: 'text.secondary',
+                          color: '#4a5568',
                           display: { xs: 'none', sm: 'block' },
                           fontSize: '0.9rem',
                           fontWeight: 400,
                         }}
                       >
-                        Search student records efficiently
+                        {activeView === 'search' ? 'Search student records efficiently' : 'View missing information and completion status'}
                       </Typography>
                     </Box>
                   </Box>
@@ -877,11 +835,11 @@ function Dashboard() {
                     onClick={handleLogout}
                     startIcon={<LogoutIcon />}
                     sx={{
-                      borderColor: alpha(theme.palette.error.main, 0.5),
-                      color: theme.palette.error.main,
+                      borderColor: '#c53030',
+                      color: '#c53030',
                       '&:hover': {
-                        backgroundColor: alpha(theme.palette.error.main, 0.05),
-                        borderColor: theme.palette.error.main,
+                        backgroundColor: 'rgba(197, 48, 48, 0.08)',
+                        borderColor: '#9b2c2c',
                       },
                       px: 2,
                       py: 0.75,
@@ -894,596 +852,674 @@ function Dashboard() {
                   </Button>
                 </Box>
 
-                {/* Search bar */}
-                <Paper 
-                  elevation={0} 
-                  sx={{ 
-                    p: { xs: 2, sm: 2.5 }, 
-                    mb: 2.5, 
-                    backgroundColor: 'white',
-                    border: '1px solid rgba(100, 116, 139, 0.08)',
-                    boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
-                    borderRadius: '12px',
-                    width: '100%',
-                  }}
-                >
-                  <Box sx={{ 
-                    display: 'flex', 
-                    flexDirection: { xs: 'column', sm: 'row' },
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    flexWrap: 'wrap',
-                    gap: { xs: 1.5, sm: 1.5 },
-                  }}>
-                    <Box sx={{ 
-                      display: 'flex', 
-                      flexDirection: { xs: 'column', sm: 'row' },
-                      alignItems: 'center', 
-                      gap: 1.5,
-                    }}>
-                      <TextField
-                        label="Search by ID or Name"
-                        placeholder="Enter ID number or full name"
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        error={!!error}
-                        helperText={error}
-                        sx={{ 
-                          '& .MuiOutlinedInput-root': {
-                            backgroundColor: 'white',
-                            borderRadius: '6px',
-                            height: '42px',
-                            '&.Mui-focused': {
-                              borderColor: '#3b82f6',
-                            }
-                          },
-                          '& .MuiInputLabel-root': {
-                            '&.Mui-focused': {
-                              color: '#3b82f6',
-                            }
-                          },
-                          width: { xs: '100%', sm: '280px' },
-                        }}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <SearchIcon sx={{ color: '#3b82f6', fontSize: 'medium' }} />
-                            </InputAdornment>
-                          ),
-                        }}
-                        onKeyPress={(e) => {
-                          if (e.key === 'Enter') {
-                            handleSearch();
-                          }
-                        }}
-                      />
-
-                      <Button 
-                        variant="contained" 
-                        color="primary" 
-                        size="medium"
-                        onClick={handleSearch}
-                        disabled={loading}
-                        sx={{ 
-                          py: 1, 
-                          px: { xs: 2, sm: 3 },
-                          minWidth: { xs: '100%', sm: '100px' },
-                          backgroundColor: '#3b82f6',
-                          borderRadius: '6px',
-                          textTransform: 'none',
-                          fontSize: '0.95rem',
-                          '&:hover': {
-                            backgroundColor: '#2563eb',
-                          },
-                        }}
-                      >
-                        {loading ? (
-                          <CircularProgress size={22} color="inherit" />
-                        ) : (
-                          'Search'
-                        )}
-                      </Button>
-                    </Box>
-
-                    <Box sx={{ 
-                      display: 'flex', 
-                      alignItems: 'center',
-                      gap: 1.5,
-                      width: { xs: '100%', sm: 'auto' },
-                    }}>
-                      <Typography variant="body2" sx={{ 
-                        color: 'text.secondary',
-                        fontWeight: 600,
-                        display: { xs: 'none', md: 'block' },
-                        fontSize: '0.9rem'
-                      }}>
-                        Display:
-                      </Typography>
-                      <ToggleButtonGroup
-                        value={activeCard}
-                        exclusive
-                        onChange={handleCardChange}
-                        aria-label="card display selection"
-                        size="small"
-                        color="primary"
-                        sx={{
-                          backgroundColor: alpha(theme.palette.primary.light, 0.05),
-                          borderRadius: '8px',
-                          padding: '3px',
-                          width: { xs: '100%', sm: 'auto' },
-                          '& .MuiToggleButton-root': {
-                            px: { xs: 1, sm: 1.5 },
-                            py: 0.75,
-                            borderRadius: '6px',
-                            borderColor: 'transparent',
-                            fontSize: '0.85rem',
-                            fontWeight: 500,
-                            color: 'text.secondary',
-                            '&.Mui-selected': {
-                              backgroundColor: 'white',
-                              color: 'primary.main',
-                              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.08)',
-                              fontWeight: 600,
-                              '&:hover': {
-                                backgroundColor: 'white',
-                              }
-                            },
-                            '&:hover': {
-                              backgroundColor: alpha(theme.palette.primary.light, 0.1),
-                              borderColor: 'transparent',
-                            },
-                            transition: 'all 0.2s ease',
-                          },
-                        }}
-                      >
-                        <ToggleButton value="all" aria-label="show all cards">
-                          <GridViewIcon sx={{ mr: { xs: 0.5, sm: 0.75 }, fontSize: '1rem' }} />
-                          <Box sx={{ display: { xs: 'block', sm: 'block' } }}>All</Box>
-                        </ToggleButton>
-                        <ToggleButton value="student" aria-label="show student card">
-                          <SchoolIcon sx={{ mr: { xs: 0.5, sm: 0.75 }, fontSize: '1rem' }} />
-                          <Box sx={{ display: { xs: 'block', sm: 'block' } }}>Student</Box>
-                        </ToggleButton>
-                        <ToggleButton value="info" aria-label="show info card">
-                          <PersonIcon sx={{ mr: { xs: 0.5, sm: 0.75 }, fontSize: '1rem' }} />
-                          <Box sx={{ display: { xs: 'block', sm: 'block' } }}>Info</Box>
-                        </ToggleButton>
-                        <ToggleButton value="candidacy" aria-label="show candidacy card">
-                          <WorkIcon sx={{ mr: { xs: 0.5, sm: 0.75 }, fontSize: '1rem' }} />
-                          <Box sx={{ display: { xs: 'block', sm: 'block' } }}>Candidacy</Box>
-                        </ToggleButton>
-                      </ToggleButtonGroup>
-                    </Box>
-                  </Box>
-                </Paper>
-                
-                {/* Multiple Results Display */}
-                {multipleResults && (
-                  <Fade in={!!multipleResults} timeout={500}>
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 3,
-                        mb: 2.5,
-                        backgroundColor: 'white',
-                        border: '1px solid rgba(100, 116, 139, 0.08)',
-                        boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
-                        borderRadius: '12px',
+                {/* Conditional rendering based on active view */}
+                {activeView === 'search' ? (
+                  <>
+                    {/* Search bar */}
+                    <Paper 
+                      elevation={0} 
+                      sx={{ 
+                        p: { xs: 2, sm: 2.5 }, 
+                        mb: 2.5, 
+                        backgroundColor: '#ffffff',
+                        border: '1px solid #e5e7eb',
+                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
+                        borderRadius: '8px',
+                        width: '100%',
                       }}
                     >
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                          Multiple Results Found
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Showing {multipleResults.length} of {totalResults} results
-                        </Typography>
-                      </Box>
-                      <Stack spacing={2}>
-                        {multipleResults.map((result, index) => (
-                          <Paper
-                            key={index}
-                            elevation={0}
-                            sx={{
-                              p: 2,
-                              border: '1px solid rgba(100, 116, 139, 0.12)',
-                              borderRadius: '8px',
-                              '&:hover': {
-                                backgroundColor: alpha(theme.palette.primary.main, 0.04),
-                                cursor: 'pointer',
-                              },
-                            }}
-                            onClick={() => {
-                              setSearchResults(result);
-                              setMultipleResults(null);
-                            }}
-                          >
-                            <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
-                                <PersonIcon />
-                              </Avatar>
-                              <Box>
-                                <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
-                                  {result.info ? `${result.info.FIRST_NAME} ${result.info.MIDDLE_NAME ? result.info.MIDDLE_NAME + ' ' : ''}${result.info.LAST_NAME}` : 'Unknown'}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                  ID: {result.info ? result.info.ID_NUM : 'N/A'}
-                                </Typography>
-                              </Box>
-                            </Stack>
-                          </Paper>
-                        ))}
-                      </Stack>
-                      {totalPages > 1 && (
-                        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-                          <Pagination
-                            count={totalPages}
-                            page={currentPage}
-                            onChange={handlePageChange}
-                            color="primary"
-                            size="large"
-                            showFirstButton
-                            showLastButton
-                            sx={{
-                              '& .MuiPaginationItem-root': {
-                                fontSize: '0.875rem',
-                                minWidth: 32,
-                                height: 32,
+                      <Box sx={{ 
+                        display: 'flex', 
+                        flexDirection: { xs: 'column', sm: 'row' },
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: { xs: 1.5, sm: 1.5 },
+                      }}>
+                        <Box sx={{ 
+                          display: 'flex', 
+                          flexDirection: { xs: 'column', sm: 'row' },
+                          alignItems: 'center', 
+                          gap: 1.5,
+                        }}>
+                          <TextField
+                            label="Search by ID or Name"
+                            placeholder="Enter ID number or full name"
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            error={!!error}
+                            helperText={error}
+                            sx={{ 
+                              '& .MuiOutlinedInput-root': {
+                                backgroundColor: '#ffffff',
                                 borderRadius: '6px',
+                                height: '42px',
+                                '&.Mui-focused': {
+                                  borderColor: '#1e40af',
+                                }
                               },
+                              '& .MuiInputLabel-root': {
+                                '&.Mui-focused': {
+                                  color: '#1e40af',
+                                }
+                              },
+                              width: { xs: '100%', sm: '280px' },
+                            }}
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <SearchIcon sx={{ color: '#1e40af', fontSize: 'medium' }} />
+                                </InputAdornment>
+                              ),
+                            }}
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                handleSearch();
+                              }
                             }}
                           />
+
+                          <Button 
+                            variant="contained" 
+                            color="primary" 
+                            size="medium"
+                            onClick={handleSearch}
+                            disabled={loading}
+                            sx={{ 
+                              py: 1, 
+                              px: { xs: 2, sm: 3 },
+                              minWidth: { xs: '100%', sm: '100px' },
+                              backgroundColor: '#1e40af',
+                              borderRadius: '6px',
+                              textTransform: 'none',
+                              fontSize: '0.95rem',
+                              '&:hover': {
+                                backgroundColor: '#1e3a8a',
+                              },
+                            }}
+                          >
+                            {loading ? (
+                              <CircularProgress size={22} color="inherit" />
+                            ) : (
+                              'Search'
+                            )}
+                          </Button>
                         </Box>
-                      )}
-                    </Paper>
-                  </Fade>
-                )}
-                
-                {/* Main content area - No Search Results */}
-                {!hasSearched && !loading && (
-                  <Fade in={!hasSearched} timeout={800}>
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 3,
-                        mb: 2,
-                        backgroundColor: 'white',
-                        border: '1px solid rgba(100, 116, 139, 0.08)',
-                        boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
-                        textAlign: 'center',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: '12px',
-                        flexGrow: 1,
-                        minHeight: '300px',
-                        width: '100%',
-                        maxWidth: {
-                          xs: '100%', 
-                          sm: '100%', 
-                          md: !drawerOpen ? '1200px' : 'none', 
-                          lg: !drawerOpen ? '1400px' : 'none', 
-                        },
-                        mx: {
-                          xs: 0, 
-                          sm: 0, 
-                          md: !drawerOpen ? 'auto' : 0, 
-                          lg: !drawerOpen ? 'auto' : 0, 
-                        },
-                      }}
-                    >
-                      <Box 
-                        sx={{ 
-                          display: 'flex',
+
+                        <Box sx={{ 
+                          display: 'flex', 
                           alignItems: 'center',
-                          justifyContent: 'center',
-                          width: 60,
-                          height: 60,
-                          borderRadius: '50%',
-                          backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                          mb: 2
-                        }}
-                      >
-                        <InfoOutlinedIcon 
-                          color="primary" 
-                          sx={{ fontSize: 30 }} 
-                        />
+                          gap: 1.5,
+                          width: { xs: '100%', sm: 'auto' },
+                        }}>
+                          <Typography variant="body2" sx={{ 
+                            color: 'text.secondary',
+                            fontWeight: 600,
+                            display: { xs: 'none', md: 'block' },
+                            fontSize: '0.9rem'
+                          }}>
+                            Display:
+                          </Typography>
+                          <ToggleButtonGroup
+                            value={activeCard}
+                            exclusive
+                            onChange={handleCardChange}
+                            aria-label="card display selection"
+                            size="small"
+                            color="primary"
+                            sx={{
+                              backgroundColor: alpha(theme.palette.primary.light, 0.05),
+                              borderRadius: '8px',
+                              padding: '3px',
+                              width: { xs: '100%', sm: 'auto' },
+                              '& .MuiToggleButton-root': {
+                                px: { xs: 1, sm: 1.5 },
+                                py: 0.75,
+                                borderRadius: '6px',
+                                borderColor: 'transparent',
+                                fontSize: '0.85rem',
+                                fontWeight: 500,
+                                color: 'text.secondary',
+                                '&.Mui-selected': {
+                                  backgroundColor: 'white',
+                                  color: 'primary.main',
+                                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.08)',
+                                  fontWeight: 600,
+                                  '&:hover': {
+                                    backgroundColor: 'white',
+                                  }
+                                },
+                                '&:hover': {
+                                  backgroundColor: alpha(theme.palette.primary.light, 0.1),
+                                  borderColor: 'transparent',
+                                },
+                                transition: 'all 0.2s ease',
+                              },
+                            }}
+                          >
+                            <ToggleButton value="all" aria-label="show all cards">
+                              <GridViewIcon sx={{ mr: { xs: 0.5, sm: 0.75 }, fontSize: '1rem' }} />
+                              <Box sx={{ display: { xs: 'block', sm: 'block' } }}>All</Box>
+                            </ToggleButton>
+                            <ToggleButton value="student" aria-label="show student card">
+                              <SchoolIcon sx={{ mr: { xs: 0.5, sm: 0.75 }, fontSize: '1rem' }} />
+                              <Box sx={{ display: { xs: 'block', sm: 'block' } }}>Student</Box>
+                            </ToggleButton>
+                            <ToggleButton value="info" aria-label="show info card">
+                              <PersonIcon sx={{ mr: { xs: 0.5, sm: 0.75 }, fontSize: '1rem' }} />
+                              <Box sx={{ display: { xs: 'block', sm: 'block' } }}>Info</Box>
+                            </ToggleButton>
+                            <ToggleButton value="candidacy" aria-label="show candidacy card">
+                              <WorkIcon sx={{ mr: { xs: 0.5, sm: 0.75 }, fontSize: '1rem' }} />
+                              <Box sx={{ display: { xs: 'block', sm: 'block' } }}>Candidacy</Box>
+                            </ToggleButton>
+                          </ToggleButtonGroup>
+                        </Box>
                       </Box>
-                      <Typography 
-                        variant="h6" 
-                        sx={{ 
-                          fontWeight: 600, 
-                          mb: 1,
-                          color: theme.palette.text.primary
-                        }}
-                      >
-                        No Search Results to Display
-                      </Typography>
-                      <Typography 
-                        variant="body1" 
-                        sx={{ 
-                          color: theme.palette.text.secondary,
-                          maxWidth: 600,
-                          mx: 'auto'
-                        }}
-                      >
-                        Enter a student ID number in the search field above to view student information. 
-                        The system will display all available records associated with the ID.
-                      </Typography>
                     </Paper>
-                  </Fade>
-                )}
-                
-                {noResults && (
-                  <Fade in={noResults} timeout={500}>
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 3,
-                        mb: 2.5,
-                        backgroundColor: 'white',
-                        border: '1px solid rgba(100, 116, 139, 0.08)',
-                        boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
-                        textAlign: 'center',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: '12px',
-                      }}
-                    >
-                      <Box 
-                        sx={{ 
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: 60,
-                          height: 60,
-                          borderRadius: '50%',
-                          backgroundColor: alpha(theme.palette.warning.main, 0.1),
-                          mb: 2
-                        }}
-                      >
-                        <ErrorOutlineIcon 
-                          color="warning" 
-                          sx={{ fontSize: 30 }} 
-                        />
-                      </Box>
-                      <Typography 
-                        variant="h6" 
-                        sx={{ 
-                          fontWeight: 600, 
-                          mb: 1,
-                          color: theme.palette.text.primary
-                        }}
-                      >
-                        No Results Found
-                      </Typography>
-                      <Typography 
-                        variant="body1" 
-                        sx={{ 
-                          color: theme.palette.text.secondary,
-                          maxWidth: 600,
-                          mx: 'auto'
-                        }}
-                      >
-                        No records were found for ID number <strong>{searchQuery}</strong>. Please verify the ID and try again, or contact the system administrator if you believe this is an error.
-                      </Typography>
-                    </Paper>
-                  </Fade>
-                )}
-                
-                {searchResults && (
-                  <Fade in={!!searchResults} timeout={500}>
-                    <Grid 
-                      container 
-                      spacing={2.4}
-                      sx={{
-                        width: '100%',
-                      }}
-                    >
-                      {/* Student Card */}
-                      {(activeCard === 'all' || activeCard === 'student') && (
-                        <Grid item xs={12} md={activeCard === 'all' ? 6 : 12} lg={activeCard === 'all' ? 4 : 12}>
-                          {searchResults.student ? (
-                            <StudentCard data={searchResults.student} />
-                          ) : (
-                            <Paper
-                              elevation={0}
-                              sx={{
-                                p: 3,
-                                backgroundColor: 'white',
-                                border: '1px solid rgba(100, 116, 139, 0.08)',
-                                boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
-                                textAlign: 'center',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: '12px',
-                                height: '100%',
-                                minHeight: '200px',
-                              }}
-                            >
-                              <Box 
-                                sx={{ 
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  width: 50,
-                                  height: 50,
-                                  borderRadius: '50%',
-                                  backgroundColor: alpha(theme.palette.info.main, 0.1),
-                                  mb: 2
+                    
+                    {/* Multiple Results Display */}
+                    {multipleResults && (
+                      <Fade in={!!multipleResults} timeout={500}>
+                        <Paper
+                          elevation={0}
+                          sx={{
+                            p: 3,
+                            mb: 2.5,
+                            backgroundColor: 'white',
+                            border: '1px solid rgba(100, 116, 139, 0.08)',
+                            boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
+                            borderRadius: '12px',
+                          }}
+                        >
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                              Multiple Results Found
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Showing {multipleResults.length} of {totalResults} results
+                            </Typography>
+                          </Box>
+                          <Stack spacing={2}>
+                            {multipleResults.map((result, index) => (
+                              <Paper
+                                key={index}
+                                elevation={0}
+                                sx={{
+                                  p: 2,
+                                  border: '1px solid rgba(100, 116, 139, 0.12)',
+                                  borderRadius: '8px',
+                                  '&:hover': {
+                                    backgroundColor: alpha(theme.palette.primary.main, 0.04),
+                                    cursor: 'pointer',
+                                  },
+                                }}
+                                onClick={() => {
+                                  setSearchResults(result);
+                                  setMultipleResults(null);
                                 }}
                               >
-                                <SchoolIcon 
-                                  color="info" 
-                                  sx={{ fontSize: 24 }} 
-                                />
-                              </Box>
-                              <Typography 
-                                variant="h6" 
-                                sx={{ 
-                                  fontWeight: 600, 
-                                  mb: 1,
-                                  color: theme.palette.text.primary
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                  <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
+                                    <PersonIcon />
+                                  </Avatar>
+                                  <Box>
+                                    <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                                      {result.info ? `${result.info.FIRST_NAME} ${result.info.MIDDLE_NAME ? result.info.MIDDLE_NAME + ' ' : ''}${result.info.LAST_NAME}` : 'Unknown'}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                      ID: {result.info ? result.info.ID_NUM : 'N/A'}
+                                    </Typography>
+                                  </Box>
+                                </Stack>
+                              </Paper>
+                            ))}
+                          </Stack>
+                          {totalPages > 1 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                              <Pagination
+                                count={totalPages}
+                                page={currentPage}
+                                onChange={handlePageChange}
+                                color="primary"
+                                size="large"
+                                showFirstButton
+                                showLastButton
+                                sx={{
+                                  '& .MuiPaginationItem-root': {
+                                    fontSize: '0.875rem',
+                                    minWidth: 32,
+                                    height: 32,
+                                    borderRadius: '6px',
+                                  },
                                 }}
-                              >
-                                No Student Record
-                              </Typography>
-                              <Typography 
-                                variant="body2" 
-                                sx={{ 
-                                  color: theme.palette.text.secondary,
-                                  maxWidth: 300,
-                                  mx: 'auto'
-                                }}
-                              >
-                                No student record was found for ID number <strong>{searchQuery}</strong>.
-                              </Typography>
-                            </Paper>
+                              />
+                            </Box>
                           )}
-                        </Grid>
-                      )}
-                      
-                      {/* Info Card */}
-                      {(activeCard === 'all' || activeCard === 'info') && (
-                        <Grid item xs={12} md={activeCard === 'all' ? 6 : 12} lg={activeCard === 'all' ? 4 : 12}>
-                          {searchResults.info ? (
-                            <InfoCard data={searchResults.info} />
-                          ) : (
-                            <Paper
-                              elevation={0}
-                              sx={{
-                                p: 3,
-                                backgroundColor: 'white',
-                                border: '1px solid rgba(100, 116, 139, 0.08)',
-                                boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
-                                textAlign: 'center',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: '12px',
-                                height: '100%',
-                                minHeight: '200px',
-                              }}
-                            >
-                              <Box 
-                                sx={{ 
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  width: 50,
-                                  height: 50,
-                                  borderRadius: '50%',
-                                  backgroundColor: alpha(theme.palette.secondary.main, 0.1),
-                                  mb: 2
-                                }}
-                              >
-                                <PersonIcon 
-                                  color="secondary" 
-                                  sx={{ fontSize: 24 }} 
-                                />
-                              </Box>
-                              <Typography 
-                                variant="h6" 
-                                sx={{ 
-                                  fontWeight: 600, 
-                                  mb: 1,
-                                  color: theme.palette.text.primary
-                                }}
-                              >
-                                No Personal Information
-                              </Typography>
-                              <Typography 
-                                variant="body2" 
-                                sx={{ 
-                                  color: theme.palette.text.secondary,
-                                  maxWidth: 300,
-                                  mx: 'auto'
-                                }}
-                              >
-                                No personal information was found for ID number <strong>{searchQuery}</strong>.
-                              </Typography>
-                            </Paper>
-                          )}
-                        </Grid>
-                      )}
-                      
-                      {/* Candidacy Card */}
-                      {(activeCard === 'all' || activeCard === 'candidacy') && (
-                        <Grid item xs={12} md={activeCard === 'all' ? 6 : 12} lg={activeCard === 'all' ? 4 : 12}>
-                          {searchResults.candidacy && searchResults.candidacy.length > 0 ? (
-                            <CandidacyCard 
-                              data={searchResults.candiday} 
-                              fullScreen={activeCard === 'candidacy'}
+                        </Paper>
+                      </Fade>
+                    )}
+                    
+                    {/* Main content area - No Search Results */}
+                    {!hasSearched && !loading && (
+                      <Fade in={!hasSearched} timeout={800}>
+                        <Paper
+                          elevation={0}
+                          sx={{
+                            p: 3,
+                            mb: 2,
+                            backgroundColor: 'white',
+                            border: '1px solid rgba(100, 116, 139, 0.08)',
+                            boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
+                            textAlign: 'center',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '12px',
+                            flexGrow: 1,
+                            minHeight: '300px',
+                            width: '100%',
+                            maxWidth: {
+                              xs: '100%', 
+                              sm: '100%', 
+                              md: !drawerOpen ? '1200px' : 'none', 
+                              lg: !drawerOpen ? '1400px' : 'none', 
+                            },
+                            mx: {
+                              xs: 0, 
+                              sm: 0, 
+                              md: !drawerOpen ? 'auto' : 0, 
+                              lg: !drawerOpen ? 'auto' : 0, 
+                            },
+                          }}
+                        >
+                          <Box 
+                            sx={{ 
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: 60,
+                              height: 60,
+                              borderRadius: '50%',
+                              backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                              mb: 2
+                            }}
+                          >
+                            <InfoOutlinedIcon 
+                              color="primary" 
+                              sx={{ fontSize: 30 }} 
                             />
-                          ) : (
-                            <Paper
-                              elevation={0}
-                              sx={{
-                                p: 3,
-                                backgroundColor: 'white',
-                                border: '1px solid rgba(100, 116, 139, 0.08)',
-                                boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
-                                textAlign: 'center',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: '12px',
-                                height: '100%',
-                                minHeight: '200px',
-                              }}
-                            >
-                              <Box 
-                                sx={{ 
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  width: 50,
-                                  height: 50,
-                                  borderRadius: '50%',
-                                  backgroundColor: alpha(theme.palette.success.main, 0.1),
-                                  mb: 2
-                                }}
-                              >
-                                <WorkIcon 
-                                  color="success" 
-                                  sx={{ fontSize: 24 }} 
-                                />
-                              </Box>
-                              <Typography 
-                                variant="h6" 
-                                sx={{ 
-                                  fontWeight: 600, 
-                                  mb: 1,
-                                  color: theme.palette.text.primary
-                                }}
-                              >
-                                No Candidacy Records
-                              </Typography>
-                              <Typography 
-                                variant="body2" 
-                                sx={{ 
-                                  color: theme.palette.text.secondary,
-                                  maxWidth: 300,
-                                  mx: 'auto'
-                                }}
-                              >
-                                No candidacy records were found for ID number <strong>{searchQuery}</strong>.
-                              </Typography>
-                            </Paper>
-                          )}
-                        </Grid>
+                          </Box>
+                          <Typography 
+                            variant="h6" 
+                            sx={{ 
+                              fontWeight: 600, 
+                              mb: 1,
+                              color: theme.palette.text.primary
+                            }}
+                          >
+                            No Search Results to Display
+                          </Typography>
+                          <Typography 
+                            variant="body1" 
+                            sx={{ 
+                              color: theme.palette.text.secondary,
+                              maxWidth: 600,
+                              mx: 'auto'
+                            }}
+                          >
+                            Enter a student ID number in the search field above to view student information. 
+                            The system will display all available records associated with the ID.
+                          </Typography>
+                        </Paper>
+                      </Fade>
+                    )}
+                    
+                    {noResults && (
+                      <Fade in={noResults} timeout={500}>
+                        <Paper
+                          elevation={0}
+                          sx={{
+                            p: 3,
+                            mb: 2.5,
+                            backgroundColor: 'white',
+                            border: '1px solid rgba(100, 116, 139, 0.08)',
+                            boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
+                            textAlign: 'center',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '12px',
+                          }}
+                        >
+                          <Box 
+                            sx={{ 
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: 60,
+                              height: 60,
+                              borderRadius: '50%',
+                              backgroundColor: alpha(theme.palette.warning.main, 0.1),
+                              mb: 2
+                            }}
+                          >
+                            <ErrorOutlineIcon 
+                              color="warning" 
+                              sx={{ fontSize: 30 }} 
+                            />
+                          </Box>
+                          <Typography 
+                            variant="h6" 
+                            sx={{ 
+                              fontWeight: 600, 
+                              mb: 1,
+                              color: theme.palette.text.primary
+                            }}
+                          >
+                            No Results Found
+                          </Typography>
+                          <Typography 
+                            variant="body1" 
+                            sx={{ 
+                              color: theme.palette.text.secondary,
+                              maxWidth: 600,
+                              mx: 'auto'
+                            }}
+                          >
+                            No records were found for ID number <strong>{searchQuery}</strong>. Please verify the ID and try again, or contact the system administrator if you believe this is an error.
+                          </Typography>
+                        </Paper>
+                      </Fade>
+                    )}
+                    
+                    {searchResults && (
+                      <Fade in={!!searchResults} timeout={500}>
+                        <Box sx={{ 
+                          width: '100%',
+                          p: 0
+                        }}>
+                          <Grid 
+                            container 
+                            spacing={0}
+                            columnSpacing={{ xs: 0, md: 2.4 }}
+                            rowSpacing={2.4}
+                            sx={{
+                              width: '100%',
+                              m: 0
+                            }}
+                          >
+                            {/* Student Card */}
+                            {(activeCard === 'all' || activeCard === 'student') && (
+                              <Grid item xs={12} md={activeCard === 'all' ? 6 : 12} lg={activeCard === 'all' ? 4 : 12}>
+                                {searchResults.student ? (
+                                  <StudentCard data={searchResults.student} />
+                                ) : (
+                                  <Paper
+                                    elevation={0}
+                                    sx={{
+                                      p: 3,
+                                      backgroundColor: 'white',
+                                      border: '1px solid rgba(100, 116, 139, 0.08)',
+                                      boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
+                                      textAlign: 'center',
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      borderRadius: '12px',
+                                      height: '100%',
+                                      minHeight: '200px',
+                                    }}
+                                  >
+                                    <Box 
+                                      sx={{ 
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: 50,
+                                        height: 50,
+                                        borderRadius: '50%',
+                                        backgroundColor: alpha(theme.palette.info.main, 0.1),
+                                        mb: 2
+                                      }}
+                                    >
+                                      <SchoolIcon 
+                                        color="info" 
+                                        sx={{ fontSize: 24 }} 
+                                      />
+                                    </Box>
+                                    <Typography 
+                                      variant="h6" 
+                                      sx={{ 
+                                        fontWeight: 600, 
+                                        mb: 1,
+                                        color: theme.palette.text.primary
+                                      }}
+                                    >
+                                      No Student Record
+                                    </Typography>
+                                    <Typography 
+                                      variant="body2" 
+                                      sx={{ 
+                                        color: theme.palette.text.secondary,
+                                        maxWidth: 300,
+                                        mx: 'auto'
+                                      }}
+                                    >
+                                      No student record was found for ID number <strong>{searchQuery}</strong>.
+                                    </Typography>
+                                  </Paper>
+                                )}
+                              </Grid>
+                            )}
+                            
+                            {/* Info Card */}
+                            {(activeCard === 'all' || activeCard === 'info') && (
+                              <Grid item xs={12} md={activeCard === 'all' ? 6 : 12} lg={activeCard === 'all' ? 4 : 12}>
+                                {searchResults.info ? (
+                                  <InfoCard data={searchResults.info} />
+                                ) : (
+                                  <Paper
+                                    elevation={0}
+                                    sx={{
+                                      p: 3,
+                                      backgroundColor: 'white',
+                                      border: '1px solid rgba(100, 116, 139, 0.08)',
+                                      boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
+                                      textAlign: 'center',
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      borderRadius: '12px',
+                                      height: '100%',
+                                      minHeight: '200px',
+                                    }}
+                                  >
+                                    <Box 
+                                      sx={{ 
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: 50,
+                                        height: 50,
+                                        borderRadius: '50%',
+                                        backgroundColor: alpha(theme.palette.secondary.main, 0.1),
+                                        mb: 2
+                                      }}
+                                    >
+                                      <PersonIcon 
+                                        color="secondary" 
+                                        sx={{ fontSize: 24 }} 
+                                      />
+                                    </Box>
+                                    <Typography 
+                                      variant="h6" 
+                                      sx={{ 
+                                        fontWeight: 600, 
+                                        mb: 1,
+                                        color: theme.palette.text.primary
+                                      }}
+                                    >
+                                      No Personal Information
+                                    </Typography>
+                                    <Typography 
+                                      variant="body2" 
+                                      sx={{ 
+                                        color: theme.palette.text.secondary,
+                                        maxWidth: 300,
+                                        mx: 'auto'
+                                      }}
+                                    >
+                                      No personal information was found for ID number <strong>{searchQuery}</strong>.
+                                    </Typography>
+                                  </Paper>
+                                )}
+                              </Grid>
+                            )}
+                            
+                            {/* Candidacy Card */}
+                            {(activeCard === 'all' || activeCard === 'candidacy') && (
+                              <Grid item xs={12} md={activeCard === 'all' ? 12 : 12} lg={activeCard === 'all' ? 4 : 12}>
+                                {searchResults.candiday && searchResults.candiday.length > 0 ? (
+                                  <CandidacyCard 
+                                    data={searchResults.candiday} 
+                                    fullScreen={activeCard === 'candidacy'}
+                                  />
+                                ) : (
+                                  <Paper
+                                    elevation={0}
+                                    sx={{
+                                      p: 3,
+                                      backgroundColor: 'white',
+                                      border: '1px solid rgba(100, 116, 139, 0.08)',
+                                      boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
+                                      textAlign: 'center',
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      borderRadius: '12px',
+                                      height: '100%',
+                                      minHeight: '200px',
+                                    }}
+                                  >
+                                    <Box 
+                                      sx={{ 
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: 50,
+                                        height: 50,
+                                        borderRadius: '50%',
+                                        backgroundColor: alpha(theme.palette.success.main, 0.1),
+                                        mb: 2
+                                      }}
+                                    >
+                                      <WorkIcon 
+                                        color="success" 
+                                        sx={{ fontSize: 24 }} 
+                                      />
+                                    </Box>
+                                    <Typography 
+                                      variant="h6" 
+                                      sx={{ 
+                                        fontWeight: 600, 
+                                        mb: 1,
+                                        color: theme.palette.text.primary
+                                      }}
+                                    >
+                                      No Candidacy Records
+                                    </Typography>
+                                    <Typography 
+                                      variant="body2" 
+                                      sx={{ 
+                                        color: theme.palette.text.secondary,
+                                        maxWidth: 300,
+                                        mx: 'auto'
+                                      }}
+                                    >
+                                      No candidacy records were found for ID number <strong>{searchQuery}</strong>.
+                                    </Typography>
+                                  </Paper>
+                                )}
+                              </Grid>
+                            )}
+                          </Grid>
+                        </Box>
+                      </Fade>
+                    )}
+                  </>
+                ) : (
+                  // Progress View
+                  <Fade in={activeView === 'progress'} timeout={500}>
+                    <Box sx={{ width: '100%' }}>
+                      {searchResults ? (
+                        <Progress data={searchResults} />
+                      ) : (
+                        <Paper
+                          elevation={0}
+                          sx={{
+                            p: 3,
+                            backgroundColor: 'white',
+                            border: '1px solid rgba(100, 116, 139, 0.08)',
+                            boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
+                            textAlign: 'center',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '12px',
+                            height: '100%',
+                            minHeight: '300px',
+                          }}
+                        >
+                          <Box 
+                            sx={{ 
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: 60,
+                              height: 60,
+                              borderRadius: '50%',
+                              backgroundColor: alpha(theme.palette.info.main, 0.1),
+                              mb: 2
+                            }}
+                          >
+                            <InfoOutlinedIcon 
+                              color="info" 
+                              sx={{ fontSize: 30 }} 
+                            />
+                          </Box>
+                          <Typography 
+                            variant="h6" 
+                            sx={{ 
+                              fontWeight: 600, 
+                              mb: 1,
+                              color: theme.palette.text.primary
+                            }}
+                          >
+                            No Data Available
+                          </Typography>
+                          <Typography 
+                            variant="body1" 
+                            sx={{ 
+                              color: theme.palette.text.secondary,
+                              maxWidth: 600,
+                              mx: 'auto'
+                            }}
+                          >
+                            Please search for a student first to view their record completion status.
+                          </Typography>
+                        </Paper>
                       )}
-                    </Grid>
+                    </Box>
                   </Fade>
                 )}
               </Box>
@@ -1549,6 +1585,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/overview" 
+            element={
+              <ProtectedRoute>
+                <Overview />
               </ProtectedRoute>
             } 
           />

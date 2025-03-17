@@ -93,16 +93,15 @@ const InfoCard = ({ data }) => {
         elevation={0} 
         sx={{ 
           height: '100%', 
-          boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
-          borderRadius: '16px',
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
+          borderRadius: '8px',
           overflow: 'hidden',
           transition: 'all 0.3s ease',
-          backgroundColor: 'rgba(248, 250, 252, 0.95)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(100, 116, 139, 0.08)',
+          backgroundColor: '#ffffff',
+          border: '1px solid #e2e8f0',
           '&:hover': {
             transform: 'translateY(-5px)',
-            boxShadow: 'rgba(0, 0, 0, 0.06) 0px 10px 30px, rgba(0, 0, 0, 0.04) 0px 0px 0px 1px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
           }
         }}
       >
@@ -110,8 +109,8 @@ const InfoCard = ({ data }) => {
           avatar={
             <Avatar 
               sx={{ 
-                background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-                boxShadow: '0 4px 10px rgba(79, 70, 229, 0.2)',
+                background: '#00712D',
+                boxShadow: '0 4px 10px rgba(0, 113, 45, 0.2)',
               }}
             >
               <PersonIcon fontSize="large" />
@@ -123,10 +122,7 @@ const InfoCard = ({ data }) => {
                 variant="h6" 
                 sx={{ 
                   fontWeight: 'bold',
-                  background: 'linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  textShadow: '0px 0px 1px rgba(79, 70, 229, 0.1)',
+                  color: '#00712D',
                 }}
               >
                 AUI Personal Information
@@ -139,13 +135,13 @@ const InfoCard = ({ data }) => {
                     flexGrow: 1,
                     height: 6,
                     borderRadius: 3,
-                    bgcolor: alpha('#4f46e5', 0.1),
+                    bgcolor: '#edf2f7',
                     '& .MuiLinearProgress-bar': {
-                      background: 'linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%)',
+                      backgroundColor: '#00712D',
                     }
                   }}
                 />
-                <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 500 }}>
+                <Typography variant="caption" sx={{ color: '#4a5568', fontWeight: 500 }}>
                   {progress}%
                 </Typography>
               </Box>
@@ -159,23 +155,24 @@ const InfoCard = ({ data }) => {
                   fontWeight: 500,
                   borderRadius: '6px',
                   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-                  bgcolor: alpha('#4f46e5', 0.1),
-                  color: '#4338ca',
-                  border: '1px solid ' + alpha('#4f46e5', 0.2),
+                  bgcolor: '#edf2f7',
+                  color: '#4a5568',
+                  border: '1px solid #e2e8f0',
                 }}
               />
             </Box>
           }
           sx={{ 
             pb: 0,
-            backgroundColor: alpha(theme.palette.secondary.main, 0.03),
-            borderBottom: '1px solid rgba(100, 116, 139, 0.08)'
+            backgroundColor: '#f8fafc',
+            borderBottom: '1px solid #e2e8f0',
+            borderLeft: '4px solid #4a5568'
           }}
         />
         
         <CardContent sx={{ p: 0 }}>
           <Box sx={{ p: 2 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#4338ca', mb: 1 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#4a5568', mb: 1 }}>
               Personal Details
             </Typography>
             <TableContainer>
@@ -185,15 +182,15 @@ const InfoCard = ({ data }) => {
                     field.value && (
                       <TableRow key={field.label} sx={{ 
                         '&:last-child td, &:last-child th': { border: 0 },
-                        '&:hover': { backgroundColor: 'rgba(79, 70, 229, 0.04)' }
+                        '&:hover': { backgroundColor: '#f8fafc' }
                       }}>
-                        <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#64748b' }}>
+                        <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#4a5568' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             {field.icon && <Box sx={{ mr: 1 }}>{field.icon}</Box>}
                             {field.label}
                           </Box>
                         </TableCell>
-                        <TableCell align="right" sx={{ pr: 1, color: '#334155' }}>{field.value}</TableCell>
+                        <TableCell align="right" sx={{ pr: 1, color: '#2d3748' }}>{field.value}</TableCell>
                       </TableRow>
                     )
                   ))}
@@ -205,7 +202,7 @@ const InfoCard = ({ data }) => {
           <Divider />
           
           <Box sx={{ p: 2 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#4338ca', mb: 1 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#4a5568', mb: 1 }}>
               Contact Information
             </Typography>
             <TableContainer>
@@ -215,22 +212,22 @@ const InfoCard = ({ data }) => {
                     field.value && (
                       <TableRow key={field.label} sx={{ 
                         '&:last-child td, &:last-child th': { border: 0 },
-                        '&:hover': { backgroundColor: 'rgba(79, 70, 229, 0.04)' }
+                        '&:hover': { backgroundColor: '#f8fafc' }
                       }}>
-                        <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#64748b' }}>
+                        <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#4a5568' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             {field.icon && <Box sx={{ mr: 1 }}>{field.icon}</Box>}
                             {field.label}
                           </Box>
                         </TableCell>
-                        <TableCell align="right" sx={{ pr: 1, color: '#334155' }}>
+                        <TableCell align="right" sx={{ pr: 1, color: '#2d3748' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                             {field.value}
                             {field.copyable && (
                               <IconButton 
                                 size="small" 
                                 onClick={() => handleCopy(field.value)}
-                                sx={{ ml: 1, color: '#4f46e5' }}
+                                sx={{ ml: 1, color: '#4a5568' }}
                               >
                                 <ContentCopyIcon fontSize="small" />
                               </IconButton>
@@ -248,7 +245,7 @@ const InfoCard = ({ data }) => {
           <Divider />
           
           <Box sx={{ p: 2 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#4338ca', mb: 1 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#4a5568', mb: 1 }}>
               Additional Information
             </Typography>
             <TableContainer>
@@ -258,15 +255,15 @@ const InfoCard = ({ data }) => {
                     field.value && (
                       <TableRow key={field.label} sx={{ 
                         '&:last-child td, &:last-child th': { border: 0 },
-                        '&:hover': { backgroundColor: 'rgba(79, 70, 229, 0.04)' }
+                        '&:hover': { backgroundColor: '#f8fafc' }
                       }}>
-                        <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#64748b' }}>
+                        <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#4a5568' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             {field.icon && <Box sx={{ mr: 1 }}>{field.icon}</Box>}
                             {field.label}
                           </Box>
                         </TableCell>
-                        <TableCell align="right" sx={{ pr: 1, color: '#334155' }}>{field.value}</TableCell>
+                        <TableCell align="right" sx={{ pr: 1, color: '#2d3748' }}>{field.value}</TableCell>
                       </TableRow>
                     )
                   ))}
@@ -278,7 +275,7 @@ const InfoCard = ({ data }) => {
       </Card>
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={3000}
+        autoHideDuration={1000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >

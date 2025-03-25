@@ -10,6 +10,7 @@ import {
   CssBaseline,
   alpha,
   keyframes,
+  useMediaQuery
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -29,6 +30,7 @@ const blinkCursor = keyframes`
 // Typing Text Component
 const TypingText = ({ text, delay = 0 }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -46,10 +48,11 @@ const TypingText = ({ text, delay = 0 }) => {
         whiteSpace: 'nowrap',
         borderRight: '3px solid',
         animation: isVisible ? `
-          ${typing} 2s steps(40, end),
+          ${typing} ${isMobile ? '1.5s' : '2s'} steps(40, end),
           ${blinkCursor} 0.75s step-end infinite
         ` : 'none',
         width: 'fit-content',
+        fontSize: isMobile ? '1.6rem' : '2rem',
       }}
     >
       {text}
@@ -76,6 +79,7 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const isMobile = useMediaQuery('(max-width:600px)');
   
   const from = location.state?.from?.pathname || "/dashboard";
 
@@ -111,21 +115,21 @@ function Login() {
           sx={{ 
             position: 'relative',
             zIndex: 2,
-            width: '460px',
+            width: isMobile ? '95%' : '460px',
           }}
         >
           <Paper
             elevation={0}
             sx={{
-              py: 4,
-              px: 4,
+              py: isMobile ? 3 : 4,
+              px: isMobile ? 2.5 : 4,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               background: 'rgba(255, 255, 255, 0.65)',
               backdropFilter: 'blur(8px)',
               boxShadow: '0 4px 30px rgba(0, 0, 0, 0.15)',
-              borderRadius: '20px',
+              borderRadius: isMobile ? '16px' : '20px',
               border: '1px solid rgba(255, 255, 255, 0.3)',
               position: 'relative',
               overflow: 'hidden',
@@ -143,7 +147,7 @@ function Login() {
           >
             <Box
               sx={{
-                mb: 3.5,
+                mb: isMobile ? 2.5 : 3.5,
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -154,9 +158,9 @@ function Login() {
                 src="/logo-AUI-02.png"
                 alt="AUI University Logo"
                 style={{
-                  height: '65px',
+                  height: isMobile ? '55px' : '65px',
                   objectFit: 'contain',
-                  marginBottom: '20px',
+                  marginBottom: isMobile ? '15px' : '20px',
                 }}
               />
               
@@ -167,7 +171,7 @@ function Login() {
                   fontWeight: 700,
                   color: '#00712D',
                   textAlign: 'left',
-                  fontSize: '2rem',
+                  fontSize: isMobile ? '1.6rem' : '2rem',
                   letterSpacing: '-0.01em',
                   mb: 0.75,
                   textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
@@ -185,7 +189,7 @@ function Login() {
                   color: '#1e293b',
                   fontWeight: 500,
                   textAlign: 'center',
-                  fontSize: '1.15rem',
+                  fontSize: isMobile ? '1rem' : '1.15rem',
                   opacity: 0,
                   animation: `${fadeIn} 0.5s ease-out forwards`,
                   animationDelay: '2s',
@@ -198,7 +202,7 @@ function Login() {
 
             <Box
               sx={{
-                mb: 4,
+                mb: isMobile ? 3 : 4,
                 width: '100%',
                 textAlign: 'center',
               }}
@@ -207,7 +211,7 @@ function Login() {
                 variant="body1"
                 sx={{
                   color: '#1e293b',
-                  fontSize: '1rem',
+                  fontSize: isMobile ? '0.9rem' : '1rem',
                   lineHeight: 1.5,
                   opacity: 0.85,
                 }}
@@ -218,17 +222,17 @@ function Login() {
 
             <Button
               variant="contained"
-              size="large"
+              size={isMobile ? "medium" : "large"}
               startIcon={<MicrosoftIcon />}
               onClick={handleOutlookLogin}
               sx={{
-                py: 1.5,
-                px: 6,
+                py: isMobile ? 1.25 : 1.5,
+                px: isMobile ? 4 : 6,
                 width: '100%',
-                maxWidth: '320px',
+                maxWidth: isMobile ? '280px' : '320px',
                 borderRadius: '10px',
                 textTransform: 'none',
-                fontSize: '1rem',
+                fontSize: isMobile ? '0.9rem' : '1rem',
                 fontWeight: 500,
                 backgroundColor: '#0078d4',
                 '&:hover': {
@@ -245,8 +249,8 @@ function Login() {
 
             <Box 
               sx={{ 
-                mt: 4,
-                pt: 3, 
+                mt: isMobile ? 3 : 4,
+                pt: isMobile ? 2 : 3, 
                 textAlign: 'center',
                 borderTop: '1px solid rgba(0, 0, 0, 0.06)',
                 width: '100%',
@@ -257,7 +261,7 @@ function Login() {
                 sx={{
                   color: '#1e293b',
                   display: 'block',
-                  fontSize: '0.75rem',
+                  fontSize: isMobile ? '0.7rem' : '0.75rem',
                   opacity: 0.75,
                   fontWeight: 500,
                 }}

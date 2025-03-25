@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { 
   Container, 
@@ -64,7 +64,7 @@ import InfoCard from './components/InfoCard';
 import CandidacyCard from './components/CandidacyCard';
 import Login from './pages/Login';
 import Progress from './components/Progress';
-import Overview from './components/Overview';
+import Overview from './components/OverView';
 
 // Create a theme instance
 const theme = createTheme({
@@ -257,6 +257,9 @@ const theme = createTheme({
           '&:hover': {
             boxShadow: 'none',
           },
+          '@media (max-width:600px)': {
+            fontSize: '0.875rem',
+          },
         },
         contained: {
           boxShadow: 'none',
@@ -355,6 +358,25 @@ const theme = createTheme({
           textTransform: 'none',
         },
       },
+    },
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          '@media (max-width:600px)': {
+            paddingLeft: '16px',
+            paddingRight: '16px',
+          },
+        },
+      },
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
     },
   },
 });
@@ -1574,31 +1596,45 @@ function Dashboard() {
 }
 
 function App() {
+  useEffect(() => {
+    let meta = document.createElement('meta');
+    meta.name = 'viewport';
+    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+    document.getElementsByTagName('head')[0].appendChild(meta);
+    
+    return () => {
+      document.getElementsByTagName('head')[0].removeChild(meta);
+    };
+  }, []);
+
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/overview" 
-            element={
-              <ProtectedRoute>
-                <Overview />
-              </ProtectedRoute>
-            } 
-          />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<Login />} />
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/overview" 
+              element={
+                <ProtectedRoute>
+                  <Overview />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

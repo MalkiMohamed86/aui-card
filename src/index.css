@@ -6,9 +6,60 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f5f5f5;
+  overflow-x: hidden;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+  html {
+    font-size: 14px;
+  }
+
+  .MuiContainer-root {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .MuiCard-root {
+    border-radius: 12px !important;
+  }
+
+  .MuiCardHeader-root {
+    padding: 12px 16px !important;
+  }
+
+  .MuiCardContent-root {
+    padding: 12px 16px !important;
+  }
+
+  .MuiButton-root {
+    padding: 6px 16px !important;
+  }
+
+  /* Improve touch targets for mobile */
+  .MuiIconButton-root {
+    padding: 8px !important;
+  }
+
+  /* Better table display on small screens */
+  .MuiTableCell-root {
+    padding: 8px 12px !important;
+  }
+}
+
+/* Adjustments for very small screens */
+@media (max-width: 360px) {
+  html {
+    font-size: 12px;
+  }
+
+  .MuiContainer-root {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
 } 

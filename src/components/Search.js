@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, useMediaQuery } from '@mui/material/styles';
 import { Paper, InputBase, IconButton, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -7,6 +7,7 @@ const Search = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -30,22 +31,23 @@ const Search = ({ onSearch }) => {
       onSubmit={handleSearch}
       elevation={0}
       sx={{
-        p: '2px 4px',
+        p: isMobile ? '2px 2px' : '2px 4px',
         display: 'flex',
         alignItems: 'center',
         width: '100%',
         border: '1px solid #e5e7eb',
         borderRadius: '8px',
         backgroundColor: '#ffffff',
-        mb: 3
+        mb: isMobile ? 2 : 3
       }}
     >
       <InputBase
         sx={{
-          ml: 1,
+          ml: isMobile ? 0.5 : 1,
           flex: 1,
           '& .MuiInputBase-input': {
-            p: 1,
+            p: isMobile ? 0.75 : 1,
+            fontSize: isMobile ? '0.875rem' : 'inherit',
             color: '#334155',
             '&::placeholder': {
               color: '#94a3b8',
@@ -53,7 +55,7 @@ const Search = ({ onSearch }) => {
             },
           },
         }}
-        placeholder="Search by ID or Name"
+        placeholder={isMobile ? "Search..." : "Search by ID or Name"}
         inputProps={{ 'aria-label': 'search student records' }}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
@@ -61,7 +63,7 @@ const Search = ({ onSearch }) => {
       <IconButton 
         type="submit" 
         sx={{ 
-          p: '10px',
+          p: isMobile ? '8px' : '10px',
           color: '#0f3460',
           '&:hover': {
             backgroundColor: '#edf2f7',
@@ -70,7 +72,7 @@ const Search = ({ onSearch }) => {
         aria-label="search"
         disabled={isLoading}
       >
-        {isLoading ? <CircularProgress size={24} color="primary" /> : <SearchIcon />}
+        {isLoading ? <CircularProgress size={isMobile ? 20 : 24} color="primary" /> : <SearchIcon fontSize={isMobile ? "small" : "medium"} />}
       </IconButton>
     </Paper>
   );

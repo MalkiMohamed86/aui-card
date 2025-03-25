@@ -16,7 +16,8 @@ import {
   Stack,
   alpha,
   useTheme,
-  LinearProgress
+  LinearProgress,
+  useMediaQuery
 } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -25,13 +26,14 @@ import { calculateStudentProgress } from '../utils/progressCalculator';
 
 const StudentCard = ({ data }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   if (!data) return null;
 
   const progress = calculateStudentProgress(data);
 
   const fields = [
-    { label: 'ID Number', value: data.idNum, icon: <AssignmentIcon fontSize="small" color="primary" /> },
+    { label: 'ID Number', value: data.idNum, icon: <AssignmentIcon fontSize={isMobile ? "small" : "small"} color="primary" /> },
     { label: 'Employment Code', value: data.studentEmployCode },
     { label: 'Web Group', value: data.webGroup },
     { label: 'Tuition Code', value: data.tuitionCode },
@@ -41,7 +43,7 @@ const StudentCard = ({ data }) => {
     { label: 'Number of Courses', value: data.numOfCourses },
     { label: 'Hours Enrolled', value: data.hoursEnrolled },
     { label: 'Term Hours Earned', value: data.termHoursEarned },
-    { label: 'Career GPA', value: data.careerGpa, icon: <GradeIcon fontSize="small" color="primary" /> },
+    { label: 'Career GPA', value: data.careerGpa, icon: <GradeIcon fontSize={isMobile ? "small" : "small"} color="primary" /> },
     { label: 'Degree Code', value: data.degreeCode },
     { label: 'Major', value: data.major1 },
     { label: 'Minor', value: data.minor1 },
@@ -64,8 +66,8 @@ const StudentCard = ({ data }) => {
         backgroundColor: '#ffffff',
         border: '1px solid #e2e8f0',
         '&:hover': {
-          transform: 'translateY(-5px)',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          transform: isMobile ? 'none' : 'translateY(-5px)',
+          boxShadow: isMobile ? '0 2px 6px rgba(0, 0, 0, 0.05)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
         }
       }}
     >
@@ -75,15 +77,17 @@ const StudentCard = ({ data }) => {
             sx={{ 
               background: '#00712D',
               boxShadow: '0 4px 10px rgba(0, 113, 45, 0.2)',
+              width: isMobile ? 40 : 48,
+              height: isMobile ? 40 : 48
             }}
           >
-            <SchoolIcon fontSize="large" />
+            <SchoolIcon fontSize={isMobile ? "small" : "medium"} />
           </Avatar>
         }
         title={
           <Box>
             <Typography 
-              variant="h6" 
+              variant={isMobile ? "subtitle1" : "h6"} 
               sx={{ 
                 fontWeight: 'bold',
                 color: '#00712D',
@@ -97,7 +101,7 @@ const StudentCard = ({ data }) => {
                 value={progress} 
                 sx={{ 
                   flexGrow: 1,
-                  height: 6,
+                  height: isMobile ? 4 : 6,
                   borderRadius: 3,
                   bgcolor: '#edf2f7',
                   '& .MuiLinearProgress-bar': {
@@ -115,6 +119,7 @@ const StudentCard = ({ data }) => {
           <Box sx={{ mt: 1 }}>
             <Chip 
               label={`ID: ${data.idNum || 'N/A'}`} 
+              size={isMobile ? "small" : "medium"}
               sx={{ 
                 fontWeight: 500,
                 borderRadius: '6px',
@@ -128,6 +133,8 @@ const StudentCard = ({ data }) => {
         }
         sx={{ 
           pb: 0,
+          pt: isMobile ? 1.5 : 2,
+          px: isMobile ? 1.5 : 2,
           backgroundColor: '#f8fafc',
           borderBottom: '1px solid #e2e8f0',
           borderLeft: '4px solid #0f3460'
@@ -135,8 +142,8 @@ const StudentCard = ({ data }) => {
       />
       
       <CardContent sx={{ p: 0 }}>
-        <Box sx={{ p: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#0f3460', mb: 1 }}>
+        <Box sx={{ p: isMobile ? 1.5 : 2 }}>
+          <Typography variant={isMobile ? "body1" : "subtitle1"} sx={{ fontWeight: 'bold', color: '#0f3460', mb: 1 }}>
             Identification
           </Typography>
           <TableContainer>
@@ -148,13 +155,33 @@ const StudentCard = ({ data }) => {
                       '&:last-child td, &:last-child th': { border: 0 },
                       '&:hover': { backgroundColor: '#f8fafc' }
                     }}>
-                      <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#4a5568' }}>
+                      <TableCell 
+                        component="th" 
+                        scope="row" 
+                        sx={{ 
+                          fontWeight: 'bold', 
+                          pl: isMobile ? 0.5 : 1, 
+                          color: '#4a5568',
+                          fontSize: isMobile ? '0.8125rem' : 'inherit',
+                          py: isMobile ? 0.75 : 1
+                        }}
+                      >
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           {field.icon && <Box sx={{ mr: 1 }}>{field.icon}</Box>}
                           {field.label}
                         </Box>
                       </TableCell>
-                      <TableCell align="right" sx={{ pr: 1, color: '#2d3748' }}>{field.value}</TableCell>
+                      <TableCell 
+                        align="right" 
+                        sx={{ 
+                          pr: isMobile ? 0.5 : 1, 
+                          color: '#2d3748',
+                          fontSize: isMobile ? '0.8125rem' : 'inherit',
+                          py: isMobile ? 0.75 : 1
+                        }}
+                      >
+                        {field.value}
+                      </TableCell>
                     </TableRow>
                   )
                 ))}
@@ -165,8 +192,8 @@ const StudentCard = ({ data }) => {
         
         <Divider />
         
-        <Box sx={{ p: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#0f3460', mb: 1 }}>
+        <Box sx={{ p: isMobile ? 1.5 : 2 }}>
+          <Typography variant={isMobile ? "body1" : "subtitle1"} sx={{ fontWeight: 'bold', color: '#0f3460', mb: 1 }}>
             Enrollment
           </Typography>
           <TableContainer>
@@ -178,13 +205,33 @@ const StudentCard = ({ data }) => {
                       '&:last-child td, &:last-child th': { border: 0 },
                       '&:hover': { backgroundColor: '#f8fafc' }
                     }}>
-                      <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#4a5568' }}>
+                      <TableCell 
+                        component="th" 
+                        scope="row" 
+                        sx={{ 
+                          fontWeight: 'bold', 
+                          pl: isMobile ? 0.5 : 1, 
+                          color: '#4a5568',
+                          fontSize: isMobile ? '0.8125rem' : 'inherit',
+                          py: isMobile ? 0.75 : 1
+                        }}
+                      >
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           {field.icon && <Box sx={{ mr: 1 }}>{field.icon}</Box>}
                           {field.label}
                         </Box>
                       </TableCell>
-                      <TableCell align="right" sx={{ pr: 1, color: '#2d3748' }}>{field.value}</TableCell>
+                      <TableCell 
+                        align="right" 
+                        sx={{ 
+                          pr: isMobile ? 0.5 : 1, 
+                          color: '#2d3748',
+                          fontSize: isMobile ? '0.8125rem' : 'inherit',
+                          py: isMobile ? 0.75 : 1
+                        }}
+                      >
+                        {field.value}
+                      </TableCell>
                     </TableRow>
                   )
                 ))}
@@ -195,8 +242,8 @@ const StudentCard = ({ data }) => {
         
         <Divider />
         
-        <Box sx={{ p: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#0f3460', mb: 1 }}>
+        <Box sx={{ p: isMobile ? 1.5 : 2 }}>
+          <Typography variant={isMobile ? "body1" : "subtitle1"} sx={{ fontWeight: 'bold', color: '#0f3460', mb: 1 }}>
             Academic Information
           </Typography>
           <TableContainer>
@@ -208,13 +255,31 @@ const StudentCard = ({ data }) => {
                       '&:last-child td, &:last-child th': { border: 0 },
                       '&:hover': { backgroundColor: '#f8fafc' }
                     }}>
-                      <TableCell component="th" scope="row" sx={{ fontWeight: 'bold', pl: 1, color: '#4a5568' }}>
+                      <TableCell 
+                        component="th" 
+                        scope="row" 
+                        sx={{ 
+                          fontWeight: 'bold', 
+                          pl: isMobile ? 0.5 : 1, 
+                          color: '#4a5568',
+                          fontSize: isMobile ? '0.8125rem' : 'inherit',
+                          py: isMobile ? 0.75 : 1
+                        }}
+                      >
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           {field.icon && <Box sx={{ mr: 1 }}>{field.icon}</Box>}
                           {field.label}
                         </Box>
                       </TableCell>
-                      <TableCell align="right" sx={{ pr: 1, color: '#2d3748' }}>
+                      <TableCell 
+                        align="right" 
+                        sx={{ 
+                          pr: isMobile ? 0.5 : 1, 
+                          color: '#2d3748',
+                          fontSize: isMobile ? '0.8125rem' : 'inherit',
+                          py: isMobile ? 0.75 : 1
+                        }}
+                      >
                         {field.label === 'Career GPA' ? (
                           <Chip 
                             label={field.value} 

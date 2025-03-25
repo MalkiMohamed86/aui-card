@@ -35,7 +35,9 @@ import {
   Tabs,
   CircularProgress,
   Alert,
-  AlertTitle
+  AlertTitle,
+  IconButton,
+  useMediaQuery
 } from '@mui/material';
 import {
   BarChart,
@@ -70,6 +72,10 @@ import PublicIcon from '@mui/icons-material/Public';
 import GradeIcon from '@mui/icons-material/Grade';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupsIcon from '@mui/icons-material/Groups';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import { useNavigate } from 'react-router-dom';
 // Import the API utility
 import { fetchStudentData } from '../utils/api';
 
@@ -101,6 +107,11 @@ const LoadingDisplay = () => {
 // Error Component
 const ErrorDisplay = ({ error, onRetry }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  
+  const handleBackToDashboard = () => {
+    navigate('/dashboard');
+  };
   
   return (
     <Container maxWidth="md" sx={{ mt: 8 }}>
@@ -129,19 +140,29 @@ const ErrorDisplay = ({ error, onRetry }) => {
         
         <Typography variant="body1" color="text.secondary" paragraph>
           We encountered an error while loading the student data. 
-          Please try again later.
+          Please try again later or return to the dashboard.
         </Typography>
         
-        {onRetry && (
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
+          {onRetry && (
+            <Button 
+              variant="contained" 
+              color="primary" 
+              onClick={onRetry}
+              startIcon={<RefreshIcon />}
+            >
+              Try Again
+            </Button>
+          )}
           <Button 
-            variant="contained" 
+            variant="outlined" 
             color="primary" 
-            onClick={onRetry}
-            sx={{ mt: 2 }}
+            onClick={handleBackToDashboard}
+            startIcon={<ArrowBackIcon />}
           >
-            Try Again
+            Back to Dashboard
           </Button>
-        )}
+        </Stack>
       </Paper>
     </Container>
   );
@@ -149,12 +170,19 @@ const ErrorDisplay = ({ error, onRetry }) => {
 
 const Overview = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const isMediumScreen = useMediaQuery(theme.breakpoints.up('md'));
   const [rawStudentData, setRawStudentData] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dataView, setDataView] = useState('student'); // 'student' or 'candidacy'
   const [selectedYear, setSelectedYear] = useState('all'); // 'all' or specific year
+
+  // Function to handle back button click
+  const handleBackClick = () => {
+    navigate('/dashboard'); // Navigate back to the main dashboard
+  };
 
   // Function to process raw student data into dashboard format
   const processDashboardData = (data, yearFilter = 'all') => {
@@ -467,47 +495,6 @@ const Overview = () => {
     return <ErrorDisplay error={error} onRetry={fetchDataFromAPI} />;
   }
 
-  if (!dashboardData) {
-    return (
-      <Container maxWidth="md" sx={{ mt: 8 }}>
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4,
-            textAlign: 'center',
-            borderTop: `4px solid ${theme.palette.warning.main}`,
-            borderRadius: 2
-          }}
-        >
-          <Alert 
-            severity="warning" 
-            variant="outlined"
-            sx={{ 
-              mb: 3,
-              '& .MuiAlert-icon': {
-                fontSize: '2rem'
-              }
-            }}
-          >
-            <AlertTitle sx={{ fontSize: '1.2rem' }}>No Data Available</AlertTitle>
-            The dashboard data appears to be empty
-          </Alert>
-          <Typography variant="body1" color="text.secondary" paragraph>
-            Please check your API connection or ensure that there is data available in the system.
-          </Typography>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            onClick={fetchDataFromAPI}
-            sx={{ mt: 2 }}
-          >
-            Refresh Data
-          </Button>
-        </Paper>
-      </Container>
-    );
-  }
-
   // Get available years from enrollment data for the filter
   const getAvailableYears = () => {
     if (!rawStudentData) return [];
@@ -571,93 +558,200 @@ const Overview = () => {
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <IconButton 
+          onClick={handleBackClick}
+          sx={{ 
+            mr: 2, 
+            bgcolor: alpha(theme.palette.primary.main, 0.1),
+            '&:hover': {
+              bgcolor: alpha(theme.palette.primary.main, 0.2),
+            }
+          }}
+          aria-label="back to dashboard"
+        >
+          <ArrowBackIcon color="primary" />
+        </IconButton>
         <Typography variant="h3" component="h1" gutterBottom fontWeight="bold" color="primary">
           University Analytics Dashboard
         </Typography>
-        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-          Comprehensive overview of student enrollment, demographics, and performance metrics for international university management
-        </Typography>
-        
-        {/* Data View Toggle - Moved to top for better visibility */}
-        <Paper 
-          elevation={2} 
+      </Box>
+      
+      <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+        Comprehensive overview of student enrollment, demographics, and performance metrics for international university management
+      </Typography>
+      
+      {/* Data View Toggle - Moved to top for better visibility */}
+      <Paper 
+        elevation={2} 
+        sx={{ 
+          mb: 4, 
+          mt: 3,
+          borderRadius: 2, 
+          overflow: 'hidden',
+          border: `1px solid ${theme.palette.divider}`,
+        }}
+      >
+        <Tabs
+          value={dataView}
+          onChange={handleDataViewChange}
+          variant="fullWidth"
+          indicatorColor="primary"
+          textColor="primary"
+          aria-label="data view tabs"
+        >
+          <Tab 
+            value="student" 
+            label="Student Records" 
+            icon={<PersonIcon />} 
+            iconPosition="start"
+            sx={{ py: 2.5, fontSize: '1rem' }}
+          />
+          <Tab 
+            value="candidacy" 
+            label="Candidacy Information" 
+            icon={<GroupsIcon />} 
+            iconPosition="start"
+            sx={{ py: 2.5, fontSize: '1rem' }}
+          />
+        </Tabs>
+      </Paper>
+      
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: { xs: 'column', sm: 'row' }, 
+        justifyContent: 'space-between', 
+        alignItems: { xs: 'flex-start', sm: 'center' }, 
+        mt: 2, 
+        mb: { xs: 4, sm: 3 },
+        gap: { xs: 2, sm: 0 }
+      }}>
+        <Stack 
+          direction={{ xs: 'column', sm: 'row' }} 
+          spacing={{ xs: 1, sm: 2 }}
           sx={{ 
-            mb: 4, 
-            mt: 3,
-            borderRadius: 2, 
-            overflow: 'hidden',
-            border: `1px solid ${theme.palette.divider}`,
+            width: { xs: '100%', sm: 'auto' }
           }}
         >
-          <Tabs
-            value={dataView}
-            onChange={handleDataViewChange}
-            variant="fullWidth"
-            indicatorColor="primary"
-            textColor="primary"
-            aria-label="data view tabs"
-          >
-            <Tab 
-              value="student" 
-              label="Student Records" 
-              icon={<PersonIcon />} 
-              iconPosition="start"
-              sx={{ py: 2.5, fontSize: '1rem' }}
-            />
-            <Tab 
-              value="candidacy" 
-              label="Candidacy Information" 
-              icon={<GroupsIcon />} 
-              iconPosition="start"
-              sx={{ py: 2.5, fontSize: '1rem' }}
-            />
-          </Tabs>
-        </Paper>
+          <Chip 
+            icon={<SchoolIcon fontSize="small" />} 
+            label={`Total Students: ${dashboardData.keyMetrics.totalEnrollment}`} 
+            color="primary" 
+            sx={{ 
+              fontWeight: 'bold', 
+              px: 2,
+              height: { xs: 36, md: 42 },
+              fontSize: { xs: '0.875rem', sm: '0.9rem', md: '1rem' },
+              '& .MuiChip-icon': {
+                fontSize: { xs: '1.2rem', md: '1.5rem' }
+              }
+            }}
+          />
+          <Chip 
+            icon={<GradeIcon fontSize="small" />} 
+            label={`Avg. GPA: ${dashboardData.keyMetrics.averageGpa}`} 
+            color="success" 
+            sx={{ 
+              fontWeight: 'bold', 
+              px: 2,
+              height: { xs: 36, md: 42 },
+              fontSize: { xs: '0.875rem', sm: '0.9rem', md: '1rem' },
+              '& .MuiChip-icon': {
+                fontSize: { xs: '1.2rem', md: '1.5rem' }
+              }
+            }}
+          />
+        </Stack>
         
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2, mb: 3 }}>
-          <Stack direction="row" spacing={2}>
-            <Chip 
-              icon={<SchoolIcon />} 
-              label={`Total Students: ${dashboardData.keyMetrics.totalEnrollment}`} 
-              color="primary" 
-              sx={{ fontWeight: 'bold', px: 2 }}
-            />
-            <Chip 
-              icon={<GradeIcon />} 
-              label={`Avg. GPA: ${dashboardData.keyMetrics.averageGpa}`} 
-              color="success" 
-              sx={{ fontWeight: 'bold', px: 2 }}
-            />
-          </Stack>
-          
-          {/* Year Filter */}
-          <FormControl sx={{ minWidth: 150 }}>
-            <InputLabel id="year-filter-label">Academic Year</InputLabel>
-            <Select
-              labelId="year-filter-label"
-              id="year-filter"
-              value={selectedYear}
-              label="Academic Year"
-              onChange={(e) => {
-                setSelectedYear(e.target.value);
-                // No need to fetch from server again - we just reprocess existing data
-              }}
-              size="small"
-              sx={{ 
-                bgcolor: selectedYear !== 'all' ? alpha(theme.palette.primary.main, 0.1) : 'transparent',
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: selectedYear !== 'all' ? theme.palette.primary.main : undefined,
-                }
-              }}
-            >
-              <MenuItem value="all">All Years</MenuItem>
-              {getAvailableYears().filter(year => year !== 'all').map(year => (
-                <MenuItem key={year} value={year}>{year}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
+        {/* Year Filter */}
+        <FormControl 
+          sx={{ 
+            minWidth: { xs: '100%', sm: 175, md: 200, lg: 225 },
+            maxWidth: { xs: '100%', sm: 200, md: 250, lg: 275 }
+          }}
+        >
+          <InputLabel id="year-filter-label" sx={{ fontSize: { md: '1rem' } }}>Academic Year</InputLabel>
+          <Select
+            labelId="year-filter-label"
+            id="year-filter"
+            value={selectedYear}
+            label="Academic Year"
+            onChange={(e) => {
+              setSelectedYear(e.target.value);
+              // No need to fetch from server again - we just reprocess existing data
+            }}
+            size={isMediumScreen ? "medium" : "small"}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 400,
+                },
+              },
+            }}
+            sx={{ 
+              bgcolor: selectedYear !== 'all' ? alpha(theme.palette.primary.main, 0.1) : 'transparent',
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: selectedYear !== 'all' ? theme.palette.primary.main : undefined,
+              },
+              '& .MuiSelect-select': {
+                display: 'flex',
+                alignItems: 'center',
+                py: { xs: 1.5, sm: 'inherit' },
+                height: { xs: 'auto', sm: 'inherit' },
+                fontSize: { xs: '0.875rem', sm: '0.9rem', md: '1rem' }
+              }
+            }}
+          >
+            <MenuItem value="all">
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center',
+                py: { md: 0.75 }
+              }}>
+                <CalendarTodayIcon 
+                  sx={{ 
+                    mr: 1.5, 
+                    color: 'primary.main',
+                    fontSize: { xs: '1.2rem', md: '1.5rem' }
+                  }} 
+                />
+                <Typography 
+                  sx={{ 
+                    fontSize: { xs: '0.875rem', sm: '0.9rem', md: '1rem' },
+                    fontWeight: 500 
+                  }}
+                >
+                  All Years
+                </Typography>
+              </Box>
+            </MenuItem>
+            {getAvailableYears().filter(year => year !== 'all').map(year => (
+              <MenuItem key={year} value={year}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center',
+                  py: { md: 0.75 }
+                }}>
+                  <SchoolIcon 
+                    sx={{ 
+                      mr: 1.5, 
+                      color: 'primary.main',
+                      fontSize: { xs: '1.2rem', md: '1.5rem' }
+                    }} 
+                  />
+                  <Typography 
+                    sx={{ 
+                      fontSize: { xs: '0.875rem', sm: '0.9rem', md: '1rem' },
+                      fontWeight: 500 
+                    }}
+                  >
+                    {year}
+                  </Typography>
+                </Box>
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
 
       {/* Key Metrics Cards - Always visible */}

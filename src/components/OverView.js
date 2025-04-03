@@ -1,13 +1,3 @@
-/*
- * Overview.js - University Analytics Dashboard
- * 
- * This component displays a comprehensive analytics dashboard for university student data.
- * It fetches data from the API endpoint using a CORS proxy in development mode.
- * 
- * All data processing is done on the client side to reduce database load. The raw student data
- * is transformed into the format needed for the dashboard visualizations.
- */
-
 import React, { useState, useEffect } from 'react';
 import { 
   Box, 
@@ -75,6 +65,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import WarningIcon from '@mui/icons-material/Warning';
 import { useNavigate } from 'react-router-dom';
 // Import the API utility
 import { fetchStudentData } from '../utils/api';
@@ -203,14 +194,6 @@ const Overview = () => {
       return sum + (parseFloat(student.career_gpa) || 0);
     }, 0) / (filteredData.length || 1);
     
-    const studentsWithGoodStanding = filteredData.filter(student => 
-      parseFloat(student.career_gpa) >= 2.0).length;
-    const retentionRate = (studentsWithGoodStanding / (filteredData.length || 1)) * 100;
-    
-    const studentsOnTrackToGraduate = filteredData.filter(student => 
-      parseFloat(student.career_gpa) >= 2.5).length;
-    const graduationRate = (studentsOnTrackToGraduate / (filteredData.length || 1)) * 100;
-    
     // Process enrollment data by year
     const enrollmentByYear = {};
     data.forEach(student => {
@@ -316,30 +299,6 @@ const Overview = () => {
       };
     });
     
-    // Process retention rate by year
-    const retentionByYear = {};
-    data.forEach(student => {
-      const year = student.yr_cde;
-      if (!year) return;
-      
-      if (!retentionByYear[year]) {
-        retentionByYear[year] = {
-          total: 0,
-          goodStanding: 0
-        };
-      }
-      
-      retentionByYear[year].total++;
-      if (parseFloat(student.career_gpa) >= 2.0) {
-        retentionByYear[year].goodStanding++;
-      }
-    });
-    
-    const retentionData = Object.keys(retentionByYear).map(year => ({
-      year,
-      rate: ((retentionByYear[year].goodStanding / (retentionByYear[year].total || 1)) * 100).toFixed(1)
-    })).sort((a, b) => a.year.localeCompare(b.year));
-    
     // Process age distribution
     const ageCounts = {
       '18-20': 0,
@@ -432,9 +391,7 @@ const Overview = () => {
     return {
       keyMetrics: {
         totalEnrollment,
-        averageGpa: avgGpa.toFixed(2),
-        retentionRate: retentionRate.toFixed(2),
-        graduationRate: graduationRate.toFixed(2)
+        averageGpa: avgGpa.toFixed(2)
       },
       enrollmentData,
       genderData,
@@ -442,7 +399,6 @@ const Overview = () => {
       gpaData,
       internationalData,
       performanceData,
-      retentionData,
       ageData,
       courseData,
       classDistribution,
@@ -756,7 +712,7 @@ const Overview = () => {
 
       {/* Key Metrics Cards - Always visible */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6}>
           <Paper
             elevation={3}
             sx={{
@@ -790,7 +746,7 @@ const Overview = () => {
             </Typography>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6}>
           <Paper
             elevation={3}
             sx={{
@@ -810,52 +766,6 @@ const Overview = () => {
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 'auto' }}>
               Overall academic performance
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper
-            elevation={3}
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              height: 140,
-              backgroundColor: alpha(theme.palette.info.main, 0.1),
-              borderLeft: `4px solid ${theme.palette.info.main}`,
-            }}
-          >
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              Retention Rate
-            </Typography>
-            <Typography variant="h3" component="div" fontWeight="bold" color="info.main">
-              {dashboardData.keyMetrics.retentionRate}%
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 'auto' }}>
-              Students maintaining good standing
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper
-            elevation={3}
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              height: 140,
-              backgroundColor: alpha(theme.palette.warning.main, 0.1),
-              borderLeft: `4px solid ${theme.palette.warning.main}`,
-            }}
-          >
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              Graduation Rate
-            </Typography>
-            <Typography variant="h3" component="div" fontWeight="bold" color="warning.main">
-              {dashboardData.keyMetrics.graduationRate}%
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 'auto' }}>
-              Students on track to graduate
             </Typography>
           </Paper>
         </Grid>
@@ -1035,9 +945,9 @@ const Overview = () => {
         </Grid>
       </Grid>
 
-          {/* Term Distribution and Performance Metrics */}
+          {/* Term Distribution */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12}>
               <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
                 <Typography variant="h6" gutterBottom fontWeight="medium">
                   Term Distribution
@@ -1135,85 +1045,6 @@ const Overview = () => {
                              value === 'SU' ? 'Summer' : value;
                     }} />
                   </PieChart>
-                </ResponsiveContainer>
-              </Paper>
-            </Grid>
-        <Grid item xs={12} md={7}>
-          <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
-            <Typography variant="h6" gutterBottom fontWeight="medium">
-              Program Performance Metrics
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-            {selectedYear !== 'all' && (
-              <Chip 
-                size="small" 
-                label={`Year: ${selectedYear}`} 
-                color="primary" 
-                sx={{ ml: 1, height: 24 }} 
-              />
-            )}
-            <ResponsiveContainer width="100%" height={350}>
-              <RadarChart outerRadius={150} data={getChartData(dashboardData.performanceData)}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="program" />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} />
-                <Radar
-                  name="GPA (scaled)"
-                  dataKey="gpa"
-                  stroke={theme.palette.primary.main}
-                  fill={theme.palette.primary.main}
-                  fillOpacity={0.6}
-                />
-                <Radar
-                  name="Retention Rate"
-                  dataKey="retention"
-                  stroke={theme.palette.success.main}
-                  fill={theme.palette.success.main}
-                  fillOpacity={0.6}
-                />
-                <Radar
-                  name="Graduation Rate"
-                  dataKey="graduation"
-                  stroke={theme.palette.warning.main}
-                  fill={theme.palette.warning.main}
-                  fillOpacity={0.6}
-                />
-                <Legend />
-                <Tooltip />
-              </RadarChart>
-            </ResponsiveContainer>
-          </Paper>
-        </Grid>
-          </Grid>
-
-          {/* Retention Rate Trend */}
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
-                <Typography variant="h6" gutterBottom fontWeight="medium">
-                  Student Retention Rate Trends
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart
-                    data={getChartData(dashboardData.retentionData)}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="year" />
-                    <YAxis domain={[80, 100]} />
-                    <Tooltip content={customTooltip} />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="rate"
-                      name="Retention Rate (%)"
-                      stroke={theme.palette.info.main}
-                      strokeWidth={2}
-                      dot={{ r: 6 }}
-                      activeDot={{ r: 8 }}
-                    />
-                  </LineChart>
                 </ResponsiveContainer>
               </Paper>
             </Grid>
@@ -1607,3 +1438,4 @@ const Overview = () => {
 };
 
 export default Overview;
+
